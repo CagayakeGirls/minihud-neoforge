@@ -6,8 +6,8 @@ import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.random.Random;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 import fi.dy.masa.malilib.network.IClientPayloadData;
@@ -16,7 +16,7 @@ import fi.dy.masa.malilib.network.PacketSplitter;
 import fi.dy.masa.minihud.MiniHUD;
 import fi.dy.masa.minihud.data.HudDataManager;
 
-@Environment(EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public abstract class ServuxHudHandler<T extends CustomPayload> implements IPluginClientPlayHandler<T>
 {
     private static final ServuxHudHandler<ServuxHudPacket.Payload> INSTANCE = new ServuxHudHandler<>() {
