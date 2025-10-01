@@ -271,7 +271,7 @@ public class DebugDataManager
             {
                 if (player.networkHandler.accepts(packet))
                 {
-                    player.networkHandler.sendPacket(packet);
+                    player.networkHandler.send(packet);
                 }
             }
         }
