@@ -16,7 +16,7 @@ import java.util.Map;
 public class MixinLanguage
 {
     @ModifyArgs(
-            method = "load(Ljava/io/InputStream;Ljava/util/function/BiConsumer;)V",
+            method = "loadFromJson",
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/util/function/BiConsumer;accept(Ljava/lang/Object;Ljava/lang/Object;)V"

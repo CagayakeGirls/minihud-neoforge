@@ -48,7 +48,7 @@ public class InventoryUtils
                 {
                     return vanillaMax;
                 }
-                else if (entry.contains(DataComponentTypes.BUNDLE_CONTENTS))
+                else if (entry.has(DataComponentTypes.BUNDLE_CONTENTS))
                 {
                     // Nesting Bundles...
                     BundleContentsComponent bundleEntry = entry.get(DataComponentTypes.BUNDLE_CONTENTS);

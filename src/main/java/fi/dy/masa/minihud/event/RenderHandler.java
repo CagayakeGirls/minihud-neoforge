@@ -232,7 +232,7 @@ public class RenderHandler implements IRenderer
                 RenderUtils.renderMapPreview(drawContext, stack, x, y, Configs.Generic.MAP_PREVIEW_SIZE.getIntegerValue(), false);
             }
         }
-        else if (stack.getComponents().contains(DataComponentTypes.CONTAINER) && InventoryUtils.shulkerBoxHasItems(stack))
+        else if (stack.getComponents().has(DataComponentTypes.CONTAINER) && InventoryUtils.shulkerBoxHasItems(stack))
         {
             if (Configs.Generic.SHULKER_BOX_PREVIEW.getBooleanValue() &&
                (Configs.Generic.SHULKER_DISPLAY_REQUIRE_SHIFT.getBooleanValue() == false || GuiBase.isShiftDown()))
@@ -287,7 +287,7 @@ public class RenderHandler implements IRenderer
                 }
             }
         }
-        else if (stack.getComponents().contains(DataComponentTypes.BUNDLE_CONTENTS) && InventoryUtils.bundleHasItems(stack))
+        else if (stack.getComponents().has(DataComponentTypes.BUNDLE_CONTENTS) && InventoryUtils.bundleHasItems(stack))
         {
             if (Configs.Generic.BUNDLE_PREVIEW.getBooleanValue() &&
                 (Configs.Generic.BUNDLE_DISPLAY_REQUIRE_SHIFT.getBooleanValue() == false || GuiBase.isShiftDown()))
@@ -331,19 +331,19 @@ public class RenderHandler implements IRenderer
         if (Configs.Generic.BEE_TOOLTIPS.getBooleanValue() &&
             //stack.getItem() instanceof BlockItem blockItem &&
             //blockItem.getBlock() instanceof BeehiveBlock)
-            stack.contains(DataComponentTypes.BEES))
+            stack.has(DataComponentTypes.BEES))
         {
             MiscUtils.addBeeTooltip(stack, list);
         }
 
         if (Configs.Generic.CUSTOM_MODEL_TOOLTIPS.getBooleanValue() &&
-            stack.contains(DataComponentTypes.CUSTOM_MODEL_DATA))
+            stack.has(DataComponentTypes.CUSTOM_MODEL_DATA))
         {
             MiscUtils.addCustomModelTooltip(stack, list);
         }
 
         if (Configs.Generic.FOOD_TOOLTIPS.getBooleanValue() &&
-            stack.contains(DataComponentTypes.FOOD))
+            stack.has(DataComponentTypes.FOOD))
         {
             MiscUtils.addFoodTooltip(stack, list);
         }
@@ -356,7 +356,7 @@ public class RenderHandler implements IRenderer
         }
 
         if (Configs.Generic.LODESTONE_TOOLTIPS.getBooleanValue() &&
-            stack.contains(DataComponentTypes.LODESTONE_TRACKER))
+            stack.has(DataComponentTypes.LODESTONE_TRACKER))
         {
             MiscUtils.addLodestoneTooltip(stack, list);
         }
