@@ -1,2 +1,2 @@
 ## Changelog
-- Port to 1.21.10 NeoForge
+- update neoforge version `21.10.33-beta` -> `21.10.64`
