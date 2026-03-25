@@ -24,6 +24,7 @@ credits="masa"
 authors="TexTrue, CagayakeGirls"
 description='''
 MiniHUD Stub.
+Configurable "mini-F3" info lines, and various overlay renderers
 '''
 
 [[mixins]]
