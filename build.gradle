@@ -115,6 +115,8 @@ jar {
 	}
 }
 
+remapJar.atAccessWideners.add("minihud.accesswidener")
+
 tasks.publish.dependsOn build
 publishing {
 	publications {
