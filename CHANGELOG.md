@@ -1,3 +1,3 @@
 ## Changelog
-- update NeoForge version `21.5.93`
-- sync upstream `0.35.3-sakura.1`
+- update NeoForge version `21.5.97`
+- sync upstream `1.21.5-0.35.4`
