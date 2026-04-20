@@ -34,6 +34,7 @@ public class ShapeLineBlock extends ShapeBlocky
     protected Vec3d endPos = Vec3d.ZERO;
     protected Vec3d effectiveStartPos = Vec3d.ZERO;
     protected Vec3d effectiveEndPos = Vec3d.ZERO;
+	protected Vec3d initialSize = new Vec3d(16.0D, 16.0D, 16.0D);
 
     private boolean hasData;
 
@@ -43,8 +44,26 @@ public class ShapeLineBlock extends ShapeBlocky
 
         this.setBlockSnap(BlockSnap.CENTER);
         this.hasData = false;
-        this.useCulling = true;
+        this.useCulling = false;
     }
+
+	@Override
+	public void onShapeInit()
+	{
+		super.onShapeInit();
+
+		Entity cameraEntity = EntityUtils.getCameraEntity();
+
+		if (cameraEntity != null &&
+			this.startPos == Vec3d.ZERO)
+		{
+			Vec3d pos = cameraEntity.getPos();
+
+			this.startPos = pos;
+			this.endPos = pos.add(this.initialSize);
+			this.updateEffectivePositions();
+		}
+	}
 
     public Vec3d getStartPos()
     {
@@ -121,10 +140,8 @@ public class ShapeLineBlock extends ShapeBlocky
 
         profiler.push("line_block_quads");
         RenderObjectVbo ctx = this.renderObjects.getFirst();
-        BufferBuilder builder = ctx.start(() -> "Line Block Quads", this.renderThroughShape ? MaLiLibPipelines.MINIHUD_SHAPE_NO_DEPTH_OFFSET : MaLiLibPipelines.MINIHUD_SHAPE_OFFSET, BufferUsage.STATIC_WRITE);
-//        MatrixStack matrices = new MatrixStack();
+        BufferBuilder builder = ctx.start(() -> "minihud:line_block/quads", this.renderThroughShape ? MaLiLibPipelines.MINIHUD_SHAPE_NO_DEPTH_OFFSET : MaLiLibPipelines.MINIHUD_SHAPE_OFFSET_NO_CULL, BufferUsage.STATIC_WRITE);
 
-//        matrices.push();
         this.renderLineShapeQuads(cameraPos, builder);
 
         try
@@ -148,7 +165,6 @@ public class ShapeLineBlock extends ShapeBlocky
             MiniHUD.LOGGER.error("ShapeLineBlock#renderQuads(): Exception; {}", err.getMessage());
         }
 
-//        matrices.pop();
         profiler.pop();
     }
 
@@ -161,10 +177,8 @@ public class ShapeLineBlock extends ShapeBlocky
 
         profiler.push("line_block_outlines");
         RenderObjectVbo ctx = this.renderObjects.get(1);
-        BufferBuilder builder = ctx.start(() -> "Line Block Outlines", MaLiLibPipelines.DEBUG_LINES_MASA_SIMPLE_LEQUAL_DEPTH, BufferUsage.STATIC_WRITE);
-//        MatrixStack matrices = new MatrixStack();
+        BufferBuilder builder = ctx.start(() -> "minihud:line_block/outlines", MaLiLibPipelines.DEBUG_LINES_MASA_SIMPLE_LEQUAL_DEPTH, BufferUsage.STATIC_WRITE);
 
-//        matrices.push();
         this.renderLineShapeLines(cameraPos, builder);
 
         try
@@ -182,7 +196,6 @@ public class ShapeLineBlock extends ShapeBlocky
             MiniHUD.LOGGER.error("ShapeLineBlock#renderOutlines(): Exception; {}", err.getMessage());
         }
 
-//        matrices.pop();
         profiler.pop();
     }
 

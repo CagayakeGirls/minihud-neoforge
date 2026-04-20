@@ -47,6 +47,7 @@ public abstract class ShapeBase extends OverlayRendererBase implements IRangeCha
         this.needsUpdate = true;
         this.renderLines = false;
         this.renderThroughShape = false;
+        this.useCulling = false;
     }
 
     @Override
@@ -55,7 +56,12 @@ public abstract class ShapeBase extends OverlayRendererBase implements IRangeCha
         return "Shapes_"+this.displayName;
     }
 
-    public ShapeType getType()
+	/**
+	 * Called when a shape is added to the list
+	 */
+	public void onShapeInit() {}
+
+	public ShapeType getType()
     {
         return this.type;
     }
@@ -80,7 +86,7 @@ public abstract class ShapeBase extends OverlayRendererBase implements IRangeCha
         return this.colorLines;
     }
 
-    public ShapeRenderType getRenderType()
+	public ShapeRenderType getRenderType()
     {
         return this.renderType;
     }
