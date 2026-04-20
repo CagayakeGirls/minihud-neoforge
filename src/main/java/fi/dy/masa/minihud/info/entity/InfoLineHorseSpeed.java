@@ -17,10 +17,19 @@ import fi.dy.masa.malilib.util.nbt.NbtEntityUtils;
 import fi.dy.masa.minihud.Reference;
 import fi.dy.masa.minihud.config.InfoToggle;
 import fi.dy.masa.minihud.info.InfoLine;
+import fi.dy.masa.minihud.info.InfoLineContext;
 
 public class InfoLineHorseSpeed extends InfoLine
 {
     private static final String HORSE_KEY = Reference.MOD_ID+".info_line.horse_speed";
+
+    // Linear conversion: max_speed = HORSE_SPEED_CONVERSION_FACTOR * base_speed + HORSE_SPEED_CONVERSION_OFFSET
+    // Calculated from data points (best linear fit):
+    //   baseSpeed = 0.1125 → maxSpeed = 4.85682890 m/s
+    //   baseSpeed = 0.225  → maxSpeed = 9.71365773 m/s
+    //   baseSpeed = 0.3375 → maxSpeed = 14.57048738 m/s
+    private static final double HORSE_SPEED_CONVERSION_FACTOR = 43.171815466666658;
+    private static final double HORSE_SPEED_CONVERSION_OFFSET = -0.000000339999999;
 
     public InfoLineHorseSpeed(InfoToggle type)
     {
@@ -36,7 +45,7 @@ public class InfoLineHorseSpeed extends InfoLine
     public boolean succeededType() { return this.succeeded; }
 
     @Override
-    public List<Entry> parse(@NotNull InfoLine.Context ctx)
+    public List<Entry> parse(@NotNull InfoLineContext ctx)
     {
         if (ctx.world() == null) return null;
 
@@ -73,6 +82,7 @@ public class InfoLineHorseSpeed extends InfoLine
         String horseType = entityType.getName().getString();
 
         if (entityType.equals(EntityType.CAMEL) ||
+//            entityType.equals(EntityType.CAMEL_HUSK) ||
             entityType.equals(EntityType.DONKEY) ||
             entityType.equals(EntityType.HORSE) ||
             entityType.equals(EntityType.LLAMA) ||
@@ -86,7 +96,7 @@ public class InfoLineHorseSpeed extends InfoLine
 
             if (speed > 0d)
             {
-                speed *= 42.1629629629629f;
+                speed = speed * HORSE_SPEED_CONVERSION_FACTOR + HORSE_SPEED_CONVERSION_OFFSET;
                 list.add(this.translate(HORSE_KEY, horseType, speed));
                 this.succeeded = true;
             }
@@ -107,7 +117,7 @@ public class InfoLineHorseSpeed extends InfoLine
 
             if (speed > 0d)
             {
-                speed *= 42.1629629629629f;
+                speed = speed * HORSE_SPEED_CONVERSION_FACTOR + HORSE_SPEED_CONVERSION_OFFSET;
                 list.add(this.translate(HORSE_KEY, horseType, speed));
                 this.succeeded = true;
             }

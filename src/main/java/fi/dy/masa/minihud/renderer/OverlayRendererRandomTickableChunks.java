@@ -45,7 +45,7 @@ public class OverlayRendererRandomTickableChunks extends OverlayRendererBase
     protected OverlayRendererRandomTickableChunks(RendererToggle toggle)
     {
         this.toggle = toggle;
-        this.useCulling = true;
+        this.useCulling = false;
         this.renderThrough = false;
         this.chunkMap = new HashMap<>();
         this.cameraEntity = null;
@@ -175,11 +175,7 @@ public class OverlayRendererRandomTickableChunks extends OverlayRendererBase
                               Configs.Colors.RANDOM_TICKS_FIXED_OVERLAY_COLOR.getColor();
 
         RenderObjectVbo ctx = this.renderObjects.getFirst();
-        BufferBuilder builder = ctx.start(() -> "minihud:random_tick/quads", MaLiLibPipelines.POSITION_COLOR_MASA_LEQUAL_DEPTH_OFFSET_1);
-//        MatrixStack matrices = new MatrixStack();
-
-//        matrices.push();
-//        MatrixStack.Entry e = matrices.peek();
+        BufferBuilder builder = ctx.start(() -> "minihud:random_tick/quads", MaLiLibPipelines.MINIHUD_SHAPE_OFFSET_NO_CULL);
 
         this.chunkMap.forEach(
                 (pos, boxes) ->
@@ -211,7 +207,6 @@ public class OverlayRendererRandomTickableChunks extends OverlayRendererBase
             MiniHUD.LOGGER.error("OverlayRendererRandomTickableChunks#renderQuads(): Exception; {}", err.getMessage());
         }
 
-//        matrices.pop();
         profiler.pop();
     }
 
@@ -229,10 +224,6 @@ public class OverlayRendererRandomTickableChunks extends OverlayRendererBase
 
         RenderObjectVbo ctx = this.renderObjects.get(1);
         BufferBuilder builder = ctx.start(() -> "minihud:random_tick/outlines", MaLiLibPipelines.DEBUG_LINES_MASA_SIMPLE_LEQUAL_DEPTH);
-//        MatrixStack matrices = new MatrixStack();
-
-//        matrices.push();
-//        MatrixStack.Entry e = matrices.peek();
 
         this.chunkMap.forEach(
                 (pos, boxes) ->
@@ -258,7 +249,6 @@ public class OverlayRendererRandomTickableChunks extends OverlayRendererBase
             MiniHUD.LOGGER.error("OverlayRendererRandomTickableChunks#renderOutlines(): Exception; {}", err.getMessage());
         }
 
-//        matrices.pop();
         profiler.pop();
     }
 

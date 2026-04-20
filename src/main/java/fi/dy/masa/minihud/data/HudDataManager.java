@@ -170,6 +170,10 @@ public class HudDataManager
                 this.unregisterChannel();
             }
         }
+        else if (!this.isWorldSpawnKnown())
+        {
+            MiniHUD.LOGGER.error("onWorldJoin: WS Not known.");
+        }
     }
 
     public void onPacketFailure()
@@ -354,6 +358,16 @@ public class HudDataManager
     public BlockPos getWorldSpawn()
     {
         return this.worldSpawn;
+    }
+
+    public String getWorldSpawnAsString()
+    {
+        return this.getWorldSpawnAsString(this.getWorldSpawn());
+    }
+
+    public String getWorldSpawnAsString(BlockPos pos)
+    {
+        return String.format("[%d, %d, %d]", pos.getX(), pos.getY(), pos.getZ());
     }
 
     public boolean isSpawnChunkRadiusKnown()
@@ -542,6 +556,16 @@ public class HudDataManager
         }
     }
 
+    public RegistryKey<World> getWorldType(String in)
+    {
+        return switch (in)
+        {
+            case "minecraft:the_nether" -> World.NETHER;
+            case "minecraft:the_end" -> World.END;
+            default -> World.OVERWORLD;
+        };
+    }
+
     public boolean receiveMetadata(NbtCompound data)
     {
         if (!this.servuxServer && !DataStorage.getInstance().hasIntegratedServer() &&
@@ -556,6 +580,7 @@ public class HudDataManager
             }
 
             this.setServuxVersion(data.getString("servux", "?"), ver);
+            // data.getString("spawnDimension");
             this.setWorldSpawn(new BlockPos(data.getInt("spawnPosX", 0), data.getInt("spawnPosY", 0), data.getInt("spawnPosZ", 0)));
             this.setSpawnChunkRadius(data.getInt("spawnChunkRadius", 2), true);
 
@@ -619,6 +644,7 @@ public class HudDataManager
             MiniHUD.debugLog("HudDataStorage#receiveSpawnMetadata(): from Servux");
 
             this.setServuxVersion(data.getString("servux", "?"), ver);
+            // data.getString("spawnDimension")
             this.setWorldSpawn(new BlockPos(data.getInt("spawnPosX", 0), data.getInt("spawnPosY", 0), data.getInt("spawnPosZ", 0)));
             this.setSpawnChunkRadius(data.getInt("spawnChunkRadius", 2), true);
 

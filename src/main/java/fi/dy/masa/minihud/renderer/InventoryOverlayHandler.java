@@ -188,14 +188,6 @@ public class InventoryOverlayHandler implements IInventoryOverlayHandler
             Block blockTmp = state.getBlock();
             BlockEntity be = null;
 
-            // Keep screen from getting 'stuck' if trying to use toggle on a lectern
-            /*
-            if (blockTmp instanceof LecternBlock && !newScreen)
-            {
-                return null;
-            }
-             */
-
             //MiniHUD.LOGGER.warn("getTarget():1: pos [{}], state [{}]", pos.toShortString(), state.toString());
 
             if (blockTmp instanceof BlockEntityProvider)
@@ -216,11 +208,7 @@ public class InventoryOverlayHandler implements IInventoryOverlayHandler
                     if (pair != null)
                     {
                         nbt = pair.getRight();
-
-//                        if (Configs.Generic.ENTITY_DATA_LOAD_NBT.getBooleanValue())
-//                        {
                         be = pair.getLeft();
-//                        }
                     }
                 }
 
@@ -251,6 +239,11 @@ public class InventoryOverlayHandler implements IInventoryOverlayHandler
         else if (trace.getType() == HitResult.Type.ENTITY)
         {
             Entity entity = ((EntityHitResult) trace).getEntity();
+
+            if (cameraEntity.getUuid().equals(entity.getUuid()))
+            {
+                return null;
+            }
 
             if (world instanceof ServerWorld)
             {
