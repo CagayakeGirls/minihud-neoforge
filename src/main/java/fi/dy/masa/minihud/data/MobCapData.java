@@ -2,16 +2,15 @@ package fi.dy.masa.minihud.data;
 
 import java.util.Arrays;
 import java.util.List;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import net.minecraft.entity.SpawnGroup;
+import net.minecraft.util.StringIdentifiable;
 import com.google.common.collect.ImmutableList;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.PrimitiveCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.entity.SpawnGroup;
-import net.minecraft.util.StringIdentifiable;
-
 import fi.dy.masa.minihud.MiniHUD;
 
 public class MobCapData
@@ -352,7 +351,7 @@ public class MobCapData
         }
 
         @Override
-        public String asString()
+        public @Nonnull String asString()
         {
             return this.name;
         }

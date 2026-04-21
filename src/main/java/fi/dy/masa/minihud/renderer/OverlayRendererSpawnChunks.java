@@ -2,9 +2,6 @@ package fi.dy.masa.minihud.renderer;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.BuiltBuffer;
@@ -15,7 +12,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.profiler.Profiler;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.tuple.Pair;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import fi.dy.masa.malilib.render.MaLiLibPipelines;
 import fi.dy.masa.malilib.util.data.Color4f;
 import fi.dy.masa.malilib.util.position.PositionUtils;
@@ -24,7 +23,6 @@ import fi.dy.masa.minihud.config.Configs;
 import fi.dy.masa.minihud.config.RendererToggle;
 import fi.dy.masa.minihud.data.HudDataManager;
 import fi.dy.masa.minihud.util.DataStorage;
-import fi.dy.masa.minihud.util.MiscUtils;
 
 public class OverlayRendererSpawnChunks extends OverlayRendererBase implements AutoCloseable
 {
@@ -50,6 +48,7 @@ public class OverlayRendererSpawnChunks extends OverlayRendererBase implements A
         this.boxesYellow = new ArrayList<>();
         this.boxesGreen = new ArrayList<>();
         this.center = BlockPos.ORIGIN;
+        this.useCulling = false;
         this.hasData = false;
     }
 
@@ -246,7 +245,7 @@ public class OverlayRendererSpawnChunks extends OverlayRendererBase implements A
 								   Configs.Colors.SPAWN_REAL_OUTER_OVERLAY_COLOR.getColor();
 
 		RenderObjectVbo ctx = this.renderObjects.getFirst();
-        BufferBuilder builder = ctx.start(() -> "minihud:spawn_chunk/quads", MaLiLibPipelines.MINIHUD_SHAPE_OFFSET);
+        BufferBuilder builder = ctx.start(() -> "minihud:spawn_chunk/quads", MaLiLibPipelines.MINIHUD_SHAPE_OFFSET_NO_CULL);
 
         fi.dy.masa.malilib.render.RenderUtils.drawBlockBoundingBoxSidesBatchedQuads(this.center, cameraPos, colorEntity, 0.001, builder);
 

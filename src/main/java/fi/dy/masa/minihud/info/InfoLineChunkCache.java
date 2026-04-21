@@ -6,7 +6,6 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 import javax.annotation.Nullable;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.server.world.OptionalChunk;
@@ -16,7 +15,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.chunk.WorldChunk;
-
 import fi.dy.masa.minihud.util.DataStorage;
 
 public class InfoLineChunkCache

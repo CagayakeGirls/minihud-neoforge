@@ -3,7 +3,6 @@ package fi.dy.masa.minihud.data;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.RegistryKey;
@@ -13,7 +12,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.SpawnHelper;
 import net.minecraft.world.World;
-
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.minihud.config.InfoToggle;
 import fi.dy.masa.minihud.data.MobCapData.EntityCategory;

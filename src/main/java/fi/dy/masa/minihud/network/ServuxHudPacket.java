@@ -2,13 +2,11 @@ package fi.dy.masa.minihud.network;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import io.netty.buffer.Unpooled;
-
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
-
+import io.netty.buffer.Unpooled;
 import fi.dy.masa.malilib.network.IClientPayloadData;
 import fi.dy.masa.minihud.MiniHUD;
 
@@ -404,7 +402,7 @@ public class ServuxHudPacket implements IClientPayloadData
 
     public record Payload(ServuxHudPacket data) implements CustomPayload
     {
-        public static final Id<Payload> ID = new Id<>(ServuxHudHandler.CHANNEL_ID);
+        public static final CustomPayload.Id<Payload> ID = new CustomPayload.Id<>(ServuxHudHandler.CHANNEL_ID);
         public static final PacketCodec<PacketByteBuf, Payload> CODEC = CustomPayload.codecOf(Payload::write, Payload::new);
 
         public Payload(PacketByteBuf input)
@@ -418,7 +416,7 @@ public class ServuxHudPacket implements IClientPayloadData
         }
 
         @Override
-        public Id<? extends CustomPayload> getId()
+        public @Nonnull CustomPayload.Id<? extends CustomPayload> getId()
         {
             return ID;
         }

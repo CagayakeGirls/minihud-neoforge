@@ -2,13 +2,13 @@ package fi.dy.masa.minihud.info;
 
 import fi.dy.masa.minihud.config.InfoToggle;
 import fi.dy.masa.minihud.mixin.render.IGlTimer;
+import org.jetbrains.annotations.ApiStatus;
+
+import javax.annotation.Nullable;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.GlTimer;
 import net.minecraft.client.gui.hud.debug.DebugHudEntries;
 import net.minecraft.util.Util;
-import org.jetbrains.annotations.ApiStatus;
-
-import javax.annotation.Nullable;
 
 public class InfoLineProfiler
 {

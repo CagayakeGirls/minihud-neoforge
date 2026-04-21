@@ -3,12 +3,6 @@ package fi.dy.masa.minihud.renderer.shapes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import it.unimi.dsi.fastutil.longs.Long2ByteOpenHashMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.BuiltBuffer;
@@ -18,7 +12,11 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.profiler.Profiler;
-
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import it.unimi.dsi.fastutil.longs.Long2ByteOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import fi.dy.masa.malilib.render.MaLiLibPipelines;
 import fi.dy.masa.malilib.util.JsonUtils;
 import fi.dy.masa.malilib.util.StringUtils;
@@ -39,7 +37,7 @@ public class ShapeCircle extends ShapeCircleBase
     {
         super(ShapeType.CIRCLE, Configs.Colors.SHAPE_CIRCLE.getColor(), 16);
         this.hasData = false;
-        this.useCulling = true;
+        this.useCulling = false;
     }
 
     @Override
@@ -77,10 +75,8 @@ public class ShapeCircle extends ShapeCircleBase
 
         profiler.push("circle_quads");
         RenderObjectVbo ctx = this.renderObjects.getFirst();
-        BufferBuilder builder = ctx.start(() -> "minihud:circle/quads", this.renderThroughShape ? MaLiLibPipelines.MINIHUD_SHAPE_NO_DEPTH_OFFSET : MaLiLibPipelines.MINIHUD_SHAPE_OFFSET);
-//        MatrixStack matrices = new MatrixStack();
+        BufferBuilder builder = ctx.start(() -> "minihud:circle/quads", this.renderThroughShape ? MaLiLibPipelines.MINIHUD_SHAPE_NO_DEPTH_OFFSET : MaLiLibPipelines.MINIHUD_SHAPE_OFFSET_NO_CULL);
 
-//        matrices.push();
         this.renderCircleShapeQuads(cameraPos, builder);
 
         try
@@ -104,7 +100,6 @@ public class ShapeCircle extends ShapeCircleBase
             MiniHUD.LOGGER.error("ShapeCircle#renderQuads(): Exception; {}", err.getMessage());
         }
 
-//        matrices.pop();
         profiler.pop();
     }
 
@@ -118,9 +113,7 @@ public class ShapeCircle extends ShapeCircleBase
         profiler.push("circle_outlines");
         RenderObjectVbo ctx = this.renderObjects.get(1);
         BufferBuilder builder = ctx.start(() -> "minihud:circle/outlines", MaLiLibPipelines.DEBUG_LINES_MASA_SIMPLE_LEQUAL_DEPTH);
-//        MatrixStack matrices = new MatrixStack();
 
-//        matrices.push();
         this.renderCircleShapeOutlines(cameraPos, builder);
 
         try
@@ -138,7 +131,6 @@ public class ShapeCircle extends ShapeCircleBase
             MiniHUD.LOGGER.error("ShapeCircle#renderOutlines(): Exception; {}", err.getMessage());
         }
 
-//        matrices.pop();
         profiler.pop();
     }
 
@@ -347,9 +339,13 @@ public class ShapeCircle extends ShapeCircleBase
     {
         JsonObject obj = super.toJson();
 
-        obj.add("height", new JsonPrimitive(this.height));
+		if (obj != null)
+		{
+			obj.add("height", new JsonPrimitive(this.height));
+			return obj;
+		}
 
-        return obj;
+		return new JsonObject();
     }
 
     @Override

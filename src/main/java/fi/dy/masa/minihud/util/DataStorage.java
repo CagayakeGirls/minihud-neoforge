@@ -1,10 +1,45 @@
 package fi.dy.masa.minihud.util;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.annotation.Nullable;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.gson.JsonObject;
-
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.ServerTask;
+import net.minecraft.server.integrated.IntegratedServer;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.structure.StructureStart;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.PlainTextContent;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableTextContent;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.GlobalPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
+import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.ChunkStatus;
+import net.minecraft.world.gen.structure.Structure;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.network.ClientPlayHandler;
 import fi.dy.masa.malilib.network.IPluginClientPlayHandler;
@@ -18,6 +53,7 @@ import fi.dy.masa.minihud.Reference;
 import fi.dy.masa.minihud.config.RendererToggle;
 import fi.dy.masa.minihud.data.HudDataManager;
 import fi.dy.masa.minihud.data.MobCapDataHandler;
+import fi.dy.masa.minihud.mixin.client.IMixinOptions;
 import fi.dy.masa.minihud.mixin.server.IMixinMinecraftServer;
 import fi.dy.masa.minihud.network.ServuxStructuresHandler;
 import fi.dy.masa.minihud.network.ServuxStructuresPacket;
@@ -25,37 +61,6 @@ import fi.dy.masa.minihud.renderer.*;
 import fi.dy.masa.minihud.renderer.shapes.ShapeManager;
 import fi.dy.masa.minihud.renderer.worker.ChunkTask;
 import fi.dy.masa.minihud.renderer.worker.ThreadWorker;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.registry.*;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.ServerTask;
-import net.minecraft.server.integrated.IntegratedServer;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.structure.StructureStart;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.PlainTextContent;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableTextContent;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.*;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ChunkStatus;
-import net.minecraft.world.gen.structure.Structure;
-
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.PriorityBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class DataStorage
 {
@@ -432,7 +437,10 @@ public class DataStorage
     {
         String[] parts = message.split(" ");
 
-        if (parts.length > 0 && (parts[0].equals("minihud-seed") || parts[0].equals("/minihud-seed")))
+        if (parts.length > 0 &&
+                (parts[0].equals("minihud-seed") ||
+                 parts[0].equals("#minihud-seed") ||
+                 parts[0].equals("/minihud-seed")))
         {
             if (parts.length == 2)
             {
@@ -460,7 +468,11 @@ public class DataStorage
 
             return true;
         }
-        else if (parts.length > 0 && (parts[0].equals("minihud-spawnchunkradius") || parts[0].equals("/minihud-spawnchunkradius")))
+        else if (parts.length > 0 &&
+                (parts[0].equals("minihud-spawnchunkradius") ||
+                 parts[0].equals("/minihud-spawnchunkradius") ||
+                 parts[0].equals("#minihud-spawnchunkradius"))
+        )
         {
             if (parts.length == 2)
             {
@@ -468,7 +480,7 @@ public class DataStorage
                 {
                     int radius = Integer.parseInt(parts[1]);
 
-                    if (radius > 0 && radius <= 32)
+                    if (radius >= -1 && radius <= 32)
                     {
                         HudDataManager.getInstance().setSpawnChunkRadius(radius, true);
                     }
@@ -714,6 +726,23 @@ public class DataStorage
         return copy;
     }
 
+    public int getStructureDataMaxRange()
+    {
+        return this.mc.options.getClampedViewDistance() + 2;
+    }
+
+    public int getServerRenderDistance()
+    {
+        final int range = ((IMixinOptions) this.mc.options).minihud_getServerRenderDistance();
+
+        if (range > 0)
+        {
+            return range;
+        }
+
+        return this.mc.options.getClampedViewDistance();
+    }
+
     public void updateStructureData()
     {
         if (this.mc != null && this.mc.world != null && this.mc.player != null)
@@ -727,7 +756,7 @@ public class DataStorage
                     if (RendererToggle.OVERLAY_STRUCTURE_MAIN_TOGGLE.getBooleanValue())
                     {
                         BlockPos playerPos = PositionUtils.getEntityBlockPos(this.mc.player);
-                        final int maxRange = this.mc.options.getClampedViewDistance() + 2;
+                        final int maxRange = this.getStructureDataMaxRange();
                         final int hysteresis = 16;
 
                         if (this.structuresNeedUpdating(playerPos, hysteresis))

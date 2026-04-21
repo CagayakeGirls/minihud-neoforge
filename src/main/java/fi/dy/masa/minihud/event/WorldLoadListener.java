@@ -8,6 +8,7 @@ import fi.dy.masa.malilib.util.JsonUtils;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.minihud.MiniHUD;
 import fi.dy.masa.minihud.Reference;
+import fi.dy.masa.minihud.data.DebugDataManager;
 import fi.dy.masa.minihud.data.EntitiesDataManager;
 import fi.dy.masa.minihud.data.HudDataManager;
 import fi.dy.masa.minihud.renderer.OverlayRenderer;
@@ -15,15 +16,22 @@ import fi.dy.masa.minihud.renderer.OverlayRendererVillagerInfo;
 import fi.dy.masa.minihud.renderer.RenderContainer;
 import fi.dy.masa.minihud.renderer.shapes.ShapeManager;
 import fi.dy.masa.minihud.util.DataStorage;
+import javax.annotation.Nullable;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.registry.DynamicRegistryManager;
 
-import javax.annotation.Nullable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class WorldLoadListener implements IWorldLoadListener
 {
+    @Override
+    public void onWorldLoadImmutable(DynamicRegistryManager.Immutable immutable)
+    {
+        DataStorage.getInstance().setWorldRegistryManager(immutable);
+    }
+
     @Override
     public void onWorldLoadPre(@Nullable ClientWorld worldBefore, @Nullable ClientWorld worldAfter, MinecraftClient mc)
     {
@@ -43,7 +51,7 @@ public class WorldLoadListener implements IWorldLoadListener
             DataStorage.getInstance().onWorldPre();
             HudDataManager.getInstance().onWorldPre();
             EntitiesDataManager.getInstance().onWorldPre();
-//            DebugDataManager.getInstance().onWorldPre();
+            DebugDataManager.getInstance().onWorldPre();
         }
     }
 
@@ -55,7 +63,7 @@ public class WorldLoadListener implements IWorldLoadListener
         HudDataManager.getInstance().reset(worldAfter == null);
         EntitiesDataManager.getInstance().reset(worldAfter == null);
         OverlayRendererVillagerInfo.INSTANCE.reset(worldAfter == null);
-//        DebugDataManager.getInstance().reset(worldAfter == null);
+        DebugDataManager.getInstance().reset(worldAfter == null);
         OverlayRenderer.reset();
 
         // Logging in to a world or changing dimensions or respawning
@@ -70,10 +78,10 @@ public class WorldLoadListener implements IWorldLoadListener
             this.readStoredDataPerDimension();
             OverlayRenderer.resetRenderTimeout();
             DataStorage.getInstance().onWorldJoin();
-            DataStorage.getInstance().setWorldRegistryManager(worldAfter.getRegistryManager());
+//            DataStorage.getInstance().setWorldRegistryManager(worldAfter.getRegistryManager());
             HudDataManager.getInstance().onWorldJoin();
             EntitiesDataManager.getInstance().onWorldJoin();
-//            DebugDataManager.getInstance().onWorldJoin();
+            DebugDataManager.getInstance().onWorldJoin();
         }
     }
 

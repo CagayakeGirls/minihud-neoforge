@@ -1,9 +1,8 @@
 package fi.dy.masa.minihud.renderer.shapes;
 
-import org.jetbrains.annotations.NotNull;
-
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import org.jetbrains.annotations.NotNull;
 
 public record SideQuad(long startPos, int width, int height, Direction side)
 {

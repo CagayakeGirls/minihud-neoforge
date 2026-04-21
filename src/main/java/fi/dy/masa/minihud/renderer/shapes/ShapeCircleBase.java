@@ -1,14 +1,12 @@
 package fi.dy.masa.minihud.renderer.shapes;
 
 import java.util.List;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import fi.dy.masa.malilib.util.*;
 import fi.dy.masa.malilib.util.data.Color4f;
 
@@ -124,16 +122,21 @@ public abstract class ShapeCircleBase extends ShapeBlocky
     {
         JsonObject obj = super.toJson();
 
-        obj.add("center", JsonUtils.vec3dToJson(this.center));
-        obj.add("main_axis", new JsonPrimitive(this.mainAxis.name()));
-        obj.add("radius", new JsonPrimitive(this.getRadius()));
+		if (obj != null)
+		{
+			obj.add("center", JsonUtils.vec3dToJson(this.center));
+			obj.add("main_axis", new JsonPrimitive(this.mainAxis.name()));
+			obj.add("radius", new JsonPrimitive(this.getRadius()));
 
-        if (this.maxRadius != DEFAULT_MAX_RADIUS)
-        {
-            obj.add("max_radius", new JsonPrimitive(this.maxRadius));
-        }
+			if (this.maxRadius != DEFAULT_MAX_RADIUS)
+			{
+				obj.add("max_radius", new JsonPrimitive(this.maxRadius));
+			}
 
-        return obj;
+			return obj;
+		}
+
+		return new JsonObject();
     }
 
     @Override

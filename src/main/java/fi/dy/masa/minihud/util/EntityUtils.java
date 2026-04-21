@@ -4,12 +4,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
-
 import fi.dy.masa.malilib.util.WorldUtils;
 
 public class EntityUtils

@@ -5,14 +5,12 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import javax.annotation.Nullable;
-import it.unimi.dsi.fastutil.longs.Long2ByteOpenHashMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
-
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-
+import it.unimi.dsi.fastutil.longs.Long2ByteOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import fi.dy.masa.malilib.util.LayerRange;
 import fi.dy.masa.malilib.util.position.PositionUtils;
 import fi.dy.masa.minihud.renderer.shapes.SideQuad;
@@ -193,12 +191,7 @@ public class SphereUtils
         double dist = center.squaredDistanceTo(x, y, z);
         double diff = squareRadius - dist;
 
-        if (diff >= 0)
-        {
-            return true;
-        }
-        
-        return false;
+	    return diff >= 0;
     }
 
     /**

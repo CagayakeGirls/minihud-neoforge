@@ -2,18 +2,17 @@ package fi.dy.masa.minihud.info.entity;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.jetbrains.annotations.NotNull;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
-
+import org.jetbrains.annotations.NotNull;
 import fi.dy.masa.malilib.util.nbt.NbtEntityUtils;
 import fi.dy.masa.minihud.Reference;
 import fi.dy.masa.minihud.config.InfoToggle;
 import fi.dy.masa.minihud.info.InfoLine;
+import fi.dy.masa.minihud.info.InfoLineContext;
 
 public class InfoLineEntityRegName extends InfoLine
 {
@@ -33,7 +32,7 @@ public class InfoLineEntityRegName extends InfoLine
     public boolean succeededType() { return false; }
 
     @Override
-    public List<Entry> parse(@NotNull InfoLine.Context ctx)
+    public List<Entry> parse(@NotNull InfoLineContext ctx)
     {
         if (ctx.world() == null) return null;
 

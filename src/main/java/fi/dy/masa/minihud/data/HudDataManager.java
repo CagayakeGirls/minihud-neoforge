@@ -38,7 +38,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.GlobalPos;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
-
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -237,7 +236,12 @@ public class HudDataManager
 
     public void setSpawnChunkRadius(int radius, boolean message)
     {
-        if (radius > 0 && radius <= 32)
+        if (radius == 0)
+        {
+            radius = -1;
+        }
+
+        if (radius >= -1 && radius <= 32)
         {
             if (this.spawnChunkRadius != radius)
             {
@@ -251,7 +255,7 @@ public class HudDataManager
                 MiniHUD.debugLog("HudDataStorage#setSpawnChunkRadius(): set spawn chunk radius [{}] -> [{}]", this.spawnChunkRadius, radius);
             }
             this.spawnChunkRadius = radius;
-            this.spawnChunkRadiusValid = true;
+	        this.spawnChunkRadiusValid = radius > 0;
         }
         else
         {
@@ -374,12 +378,7 @@ public class HudDataManager
 
     public int getSpawnChunkRadius()
     {
-        if (this.spawnChunkRadius > -1)
-        {
-            return this.spawnChunkRadius;
-        }
-
-        return -1;
+	    return Math.max(this.spawnChunkRadius, -1);
     }
 
     public boolean hasValidWeatherCycle()

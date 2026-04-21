@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.IntFunction;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -57,7 +58,7 @@ public class OverlayRendererBiomeBorders extends OverlayRendererBase
     {
         this.renderQuads = new ArrayList<>();
         this.hasData = false;
-        this.useCulling = true;
+        this.useCulling = false;
         this.renderThrough = false;
     }
 
@@ -160,9 +161,6 @@ public class OverlayRendererBiomeBorders extends OverlayRendererBase
         profiler.push("biome_quads");
         RenderObjectVbo ctx = this.renderObjects.getFirst();
         BufferBuilder builder = ctx.start(() -> "minihud:biome/quads", MaLiLibPipelines.POSITION_COLOR_MASA_LEQUAL_DEPTH_OFFSET_1);
-//        MatrixStack matrices = new MatrixStack();
-//
-//        matrices.push();
 
         for (ColoredQuad quad : this.renderQuads)
         {
@@ -191,7 +189,6 @@ public class OverlayRendererBiomeBorders extends OverlayRendererBase
             MiniHUD.LOGGER.error("OverlayRendererBiomeBorders#renderQuads(): Exception; {}", err.getMessage());
         }
 
-//        matrices.pop();
         profiler.pop();
     }
 
@@ -202,10 +199,6 @@ public class OverlayRendererBiomeBorders extends OverlayRendererBase
         profiler.push("biome_outlines");
         RenderObjectVbo ctx = this.renderObjects.get(1);
         BufferBuilder builder = ctx.start(() -> "minihud:biome/outlines", MaLiLibPipelines.DEBUG_LINES_MASA_SIMPLE_LEQUAL_DEPTH);
-//        MatrixStack matrices = new MatrixStack();
-
-//        matrices.push();
-//        MatrixStack.Entry e = matrices.peek();
 
         for (ColoredQuad quad : this.renderQuads)
         {
@@ -228,7 +221,6 @@ public class OverlayRendererBiomeBorders extends OverlayRendererBase
             MiniHUD.LOGGER.error("OverlayRendererBiomeBorders#renderOutlines(): Exception; {}", err.getMessage());
         }
 
-//        matrices.pop();
         profiler.pop();
     }
 
@@ -789,17 +781,22 @@ public class OverlayRendererBiomeBorders extends OverlayRendererBase
     {
         try
         {
-            Optional<RegistryEntry.Reference<Biome>> optional = registry.getEntry(Identifier.tryParse(biomeId));
+			Identifier rl = Identifier.tryParse(biomeId);
 
-            if (optional.isPresent())
-            {
-                int id = this.biomeMapping.getInt(optional.get().value());
+			if (rl != null)
+			{
+				Optional<RegistryEntry.Reference<Biome>> optional = registry.getEntry(rl);
 
-                if (id >= 0)
-                {
-                    setter.set(id, Color4f.fromColor(color, 0.25f));
-                }
-            }
+				if (optional.isPresent())
+				{
+					int id = this.biomeMapping.getInt(optional.get().value());
+
+					if (id >= 0)
+					{
+						setter.set(id, Color4f.fromColor(color, 0.25f));
+					}
+				}
+			}
         }
         catch (Exception ignore) {}
     }
@@ -844,7 +841,7 @@ public class OverlayRendererBiomeBorders extends OverlayRendererBase
     protected record ColoredQuad(Vec3i start, int width, int height, Direction side, int biomeId)
     {
         @Override
-        public String toString()
+        public @Nonnull String toString()
         {
             return "ColoredQuad{start=" + this.start + ", width=" + this.width + ", height=" + this.height +
                            ", side=" + this.side + ", biomeId=" + this.biomeId + '}';

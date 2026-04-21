@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import javax.annotation.Nonnull;
-import org.apache.commons.lang3.tuple.Pair;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.mob.SkeletonEntity;
@@ -13,11 +11,12 @@ import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.entity.mob.ZombieVillagerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
-
+import org.apache.commons.lang3.tuple.Pair;
 import fi.dy.masa.malilib.util.nbt.NbtEntityUtils;
 import fi.dy.masa.minihud.Reference;
 import fi.dy.masa.minihud.config.InfoToggle;
 import fi.dy.masa.minihud.info.InfoLine;
+import fi.dy.masa.minihud.info.InfoLineContext;
 import fi.dy.masa.minihud.mixin.entity.IMixinSkeletonEntity;
 import fi.dy.masa.minihud.mixin.entity.IMixinZombieEntity;
 import fi.dy.masa.minihud.mixin.entity.IMixinZombieVillagerEntity;
@@ -41,7 +40,7 @@ public class InfoLineZombieConversion extends InfoLine
     public boolean succeededType() { return false; }
 
     @Override
-    public List<Entry> parse(@Nonnull Context ctx)
+    public List<Entry> parse(@Nonnull InfoLineContext ctx)
     {
         if (ctx.world() == null) return null;
 

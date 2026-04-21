@@ -2,11 +2,6 @@ package fi.dy.masa.minihud.renderer.shapes;
 
 import java.util.List;
 import java.util.function.LongConsumer;
-import com.google.gson.JsonObject;
-import it.unimi.dsi.fastutil.longs.Long2ByteOpenHashMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.BuiltBuffer;
@@ -16,7 +11,10 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.profiler.Profiler;
-
+import com.google.gson.JsonObject;
+import it.unimi.dsi.fastutil.longs.Long2ByteOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import fi.dy.masa.malilib.render.MaLiLibPipelines;
 import fi.dy.masa.malilib.util.*;
 import fi.dy.masa.malilib.util.position.PositionUtils;
@@ -43,7 +41,7 @@ public class ShapeLineBlock extends ShapeBlocky
 
         this.setBlockSnap(BlockSnap.CENTER);
         this.hasData = false;
-        this.useCulling = true;
+        this.useCulling = false;
     }
 
 	@Override
@@ -139,10 +137,8 @@ public class ShapeLineBlock extends ShapeBlocky
 
         profiler.push("line_block_quads");
         RenderObjectVbo ctx = this.renderObjects.getFirst();
-        BufferBuilder builder = ctx.start(() -> "minihud:line_block/quads", this.renderThroughShape ? MaLiLibPipelines.MINIHUD_SHAPE_NO_DEPTH_OFFSET : MaLiLibPipelines.MINIHUD_SHAPE_OFFSET);
-//        MatrixStack matrices = new MatrixStack();
+        BufferBuilder builder = ctx.start(() -> "minihud:line_block/quads", this.renderThroughShape ? MaLiLibPipelines.MINIHUD_SHAPE_NO_DEPTH_OFFSET : MaLiLibPipelines.MINIHUD_SHAPE_OFFSET_NO_CULL);
 
-//        matrices.push();
         this.renderLineShapeQuads(cameraPos, builder);
 
         try
@@ -166,7 +162,6 @@ public class ShapeLineBlock extends ShapeBlocky
             MiniHUD.LOGGER.error("ShapeLineBlock#renderQuads(): Exception; {}", err.getMessage());
         }
 
-//        matrices.pop();
         profiler.pop();
     }
 
@@ -180,9 +175,7 @@ public class ShapeLineBlock extends ShapeBlocky
         profiler.push("line_block_outlines");
         RenderObjectVbo ctx = this.renderObjects.get(1);
         BufferBuilder builder = ctx.start(() -> "minihud:line_block/outlines", MaLiLibPipelines.DEBUG_LINES_MASA_SIMPLE_LEQUAL_DEPTH);
-//        MatrixStack matrices = new MatrixStack();
 
-//        matrices.push();
         this.renderLineShapeLines(cameraPos, builder);
 
         try
@@ -200,7 +193,6 @@ public class ShapeLineBlock extends ShapeBlocky
             MiniHUD.LOGGER.error("ShapeLineBlock#renderOutlines(): Exception; {}", err.getMessage());
         }
 
-//        matrices.pop();
         profiler.pop();
     }
 
@@ -228,9 +220,15 @@ public class ShapeLineBlock extends ShapeBlocky
     public JsonObject toJson()
     {
         JsonObject obj = super.toJson();
-        obj.add("start", JsonUtils.vec3dToJson(this.startPos));
-        obj.add("end", JsonUtils.vec3dToJson(this.endPos));
-        return obj;
+
+		if (obj != null)
+		{
+			obj.add("start", JsonUtils.vec3dToJson(this.startPos));
+			obj.add("end", JsonUtils.vec3dToJson(this.endPos));
+			return obj;
+		}
+
+		return new JsonObject();
     }
 
     @Override

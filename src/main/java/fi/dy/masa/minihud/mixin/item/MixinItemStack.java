@@ -1,7 +1,6 @@
 package fi.dy.masa.minihud.mixin.item;
 
 import java.util.function.Consumer;
-
 import net.minecraft.block.BeehiveBlock;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;

@@ -2,7 +2,6 @@ package fi.dy.masa.minihud.util;
 
 import java.util.Iterator;
 import java.util.List;
-
 import net.minecraft.block.entity.BeehiveBlockEntity;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.BeesComponent;
@@ -11,7 +10,6 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
 import fi.dy.masa.minihud.event.RenderHandler;
 
 public class InventoryUtils

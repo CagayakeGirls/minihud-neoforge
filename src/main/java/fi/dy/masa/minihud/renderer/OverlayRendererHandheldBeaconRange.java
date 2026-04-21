@@ -1,5 +1,9 @@
 package fi.dy.masa.minihud.renderer;
 
+import fi.dy.masa.malilib.render.MaLiLibPipelines;
+import fi.dy.masa.malilib.util.data.Color4f;
+import fi.dy.masa.minihud.MiniHUD;
+import fi.dy.masa.minihud.config.RendererToggle;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BufferBuilder;
@@ -12,11 +16,6 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.profiler.Profiler;
 import net.minecraft.world.World;
-
-import fi.dy.masa.malilib.render.MaLiLibPipelines;
-import fi.dy.masa.malilib.util.data.Color4f;
-import fi.dy.masa.minihud.MiniHUD;
-import fi.dy.masa.minihud.config.RendererToggle;
 
 public class OverlayRendererHandheldBeaconRange extends OverlayRendererBase
 {
@@ -33,7 +32,7 @@ public class OverlayRendererHandheldBeaconRange extends OverlayRendererBase
     protected OverlayRendererHandheldBeaconRange()
     {
         this.level = -1;
-        this.useCulling = true;
+        this.useCulling = false;
         this.renderThrough = false;
         this.box = null;
         this.hasData = false;
@@ -112,7 +111,7 @@ public class OverlayRendererHandheldBeaconRange extends OverlayRendererBase
         Color4f color = OverlayRendererBeaconRange.getColorForLevel(this.level);
 
         RenderObjectVbo ctx = this.renderObjects.getFirst();
-        BufferBuilder builder = ctx.start(() -> "minihud:held_beacon/quads", MaLiLibPipelines.POSITION_COLOR_MASA_LEQUAL_DEPTH_OFFSET_1);
+        BufferBuilder builder = ctx.start(() -> "minihud:held_beacon/quads", MaLiLibPipelines.MINIHUD_SHAPE_OFFSET_NO_CULL);
         MatrixStack matrices = new MatrixStack();
 
         matrices.push();
@@ -156,9 +155,7 @@ public class OverlayRendererHandheldBeaconRange extends OverlayRendererBase
 
         RenderObjectVbo ctx = this.renderObjects.get(1);
         BufferBuilder builder = ctx.start(() -> "minihud:held_beacon/outlines", MaLiLibPipelines.DEBUG_LINES_MASA_SIMPLE_LEQUAL_DEPTH);
-//        MatrixStack matrices = new MatrixStack();
 
-//        matrices.push();
         RenderUtils.drawBoxAllEdgesBatchedLines(this.box, Color4f.fromColor(color.intValue, 1f), builder);
 
         try
@@ -176,7 +173,6 @@ public class OverlayRendererHandheldBeaconRange extends OverlayRendererBase
             MiniHUD.LOGGER.error("OverlayRendererHandheldBeaconRange#renderOutlines(): Exception; {}", err.getMessage());
         }
 
-//        matrices.pop();
         profiler.pop();
     }
 

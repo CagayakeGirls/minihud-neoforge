@@ -1,7 +1,5 @@
 package fi.dy.masa.minihud.hotkeys;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.hotkeys.*;
 import fi.dy.masa.malilib.render.InventoryOverlayScreen;
@@ -19,6 +17,8 @@ import fi.dy.masa.minihud.renderer.shapes.ShapeBase;
 import fi.dy.masa.minihud.renderer.shapes.ShapeManager;
 import fi.dy.masa.minihud.util.DataStorage;
 import fi.dy.masa.minihud.util.DebugInfoUtils;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.Entity;
 
 public class KeyCallbacks
 {
@@ -76,13 +76,36 @@ public class KeyCallbacks
 
         RendererToggle.SHAPE_RENDERER.setValueChangeCallback(RendererCallbacks::onShapeRendererToggled);
 
-//        RendererToggle.DEBUG_DATA_MAIN_TOGGLE.setValueChangeCallback(RendererCallbacks::onDebugServiceToggled);
         RendererToggle.DEBUG_CHUNK_BORDER.setValueChangeCallback(DebugInfoUtils::toggleDebugRenderer);
-        RendererToggle.DEBUG_CHUNK_INFO.setValueChangeCallback(DebugInfoUtils::toggleDebugRenderer);
-        RendererToggle.DEBUG_CHUNK_OCCLUSION.setValueChangeCallback(DebugInfoUtils::toggleDebugRenderer);
-//        RendererToggle.DEBUG_NEIGHBOR_UPDATES.setValueChangeCallback(DebugInfoUtils::toggleDebugRenderer);
-        //RendererToggle.DEBUG_PATH_FINDING.setValueChangeCallback(DebugInfoUtils::toggleDebugRenderer);
-        RendererToggle.DEBUG_OCTREEE.setValueChangeCallback(DebugInfoUtils::toggleDebugRenderer);
+	    RendererToggle.DEBUG_CHUNK_SECTION_OCTREEE.setValueChangeCallback(DebugInfoUtils::toggleDebugRenderer);
+	    RendererToggle.DEBUG_WATER.setValueChangeCallback(DebugInfoUtils::toggleDebugDataConfig);
+	    RendererToggle.DEBUG_HEIGHTMAP.setValueChangeCallback(DebugInfoUtils::toggleDebugDataConfig);
+	    RendererToggle.DEBUG_COLLISION_BOXES.setValueChangeCallback(DebugInfoUtils::toggleDebugDataConfig);
+	    RendererToggle.DEBUG_SUPPORTING_BLOCK.setValueChangeCallback(DebugInfoUtils::toggleDebugDataConfig);
+	    RendererToggle.DEBUG_LIGHT.setValueChangeCallback(DebugInfoUtils::toggleDebugDataConfig);
+//	    RendererToggle.DEBUG_BLOCK_LIGHT.setValueChangeCallback(DebugInfoUtils::toggleDebugRenderer);
+//	    RendererToggle.DEBUG_SKY_LIGHT.setValueChangeCallback(DebugInfoUtils::toggleDebugRenderer);
+//	    RendererToggle.DEBUG_BLOCK_OUTLINE.setValueChangeCallback(DebugInfoUtils::toggleDebugRenderer);
+	    RendererToggle.DEBUG_CHUNK_LOADING.setValueChangeCallback(DebugInfoUtils::toggleDebugDataConfig);
+	    RendererToggle.DEBUG_SKYLIGHT_SECTIONS.setValueChangeCallback(DebugInfoUtils::toggleDebugDataConfig);
+	    RendererToggle.DEBUG_ENTITY_HITBOXES.setValueChangeCallback(DebugInfoUtils::toggleDebugRenderer);
+        RendererToggle.DEBUG_CHUNK_SECTION_PATHS.setValueChangeCallback(DebugInfoUtils::toggleDebugRenderer);
+        RendererToggle.DEBUG_CHUNK_SECTION_VISIBILITY.setValueChangeCallback(DebugInfoUtils::toggleDebugRenderer);
+
+	    RendererToggle.DEBUG_DATA_MAIN_TOGGLE.setValueChangeCallback(RendererCallbacks::onDebugServiceToggled);
+	    RendererToggle.DEBUG_PATH_FINDING.setValueChangeCallback(DebugInfoUtils::toggleDebugDataConfig);
+	    RendererToggle.DEBUG_NEIGHBOR_UPDATES.setValueChangeCallback(DebugInfoUtils::toggleDebugDataConfig);
+	    RendererToggle.DEBUG_REDSTONE_UPDATE_ORDER.setValueChangeCallback(DebugInfoUtils::toggleDebugDataConfig);
+	    RendererToggle.DEBUG_STRUCTURES.setValueChangeCallback(DebugInfoUtils::toggleDebugDataConfig);
+	    RendererToggle.DEBUG_VILLAGE_SECTIONS.setValueChangeCallback(DebugInfoUtils::toggleDebugDataConfig);
+	    RendererToggle.DEBUG_BRAIN.setValueChangeCallback(DebugInfoUtils::toggleDebugDataConfig);
+	    RendererToggle.DEBUG_POI.setValueChangeCallback(DebugInfoUtils::toggleDebugDataConfig);
+	    RendererToggle.DEBUG_BEEDATA.setValueChangeCallback(DebugInfoUtils::toggleDebugDataConfig);
+	    RendererToggle.DEBUG_RAID_CENTER.setValueChangeCallback(DebugInfoUtils::toggleDebugDataConfig);
+	    RendererToggle.DEBUG_GOAL_SELECTOR.setValueChangeCallback(DebugInfoUtils::toggleDebugDataConfig);
+	    RendererToggle.DEBUG_GAME_EVENT.setValueChangeCallback(DebugInfoUtils::toggleDebugDataConfig);
+	    RendererToggle.DEBUG_BREEZE_JUMP.setValueChangeCallback(DebugInfoUtils::toggleDebugDataConfig);
+	    RendererToggle.DEBUG_ENTITY_BLOCK_INTERSECTION.setValueChangeCallback(DebugInfoUtils::toggleDebugDataConfig);
     }
 
     private static void updateBeaconOverlay()

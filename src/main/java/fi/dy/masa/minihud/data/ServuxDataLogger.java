@@ -2,10 +2,11 @@ package fi.dy.masa.minihud.data;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.StringIdentifiable;
-
-import javax.annotation.Nullable;
 
 public enum ServuxDataLogger implements StringIdentifiable
 {
@@ -26,7 +27,7 @@ public enum ServuxDataLogger implements StringIdentifiable
     }
 
     @Override
-    public String asString()
+    public @Nonnull String asString()
     {
         return this.name;
     }

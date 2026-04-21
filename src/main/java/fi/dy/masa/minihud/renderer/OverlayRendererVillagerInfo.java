@@ -3,9 +3,6 @@ package fi.dy.masa.minihud.renderer;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import org.apache.commons.lang3.tuple.Pair;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
@@ -19,13 +16,18 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.EnchantmentTags;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.GlobalPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.profiler.Profiler;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.TradeOfferList;
 import net.minecraft.village.VillagerProfession;
 import net.minecraft.world.World;
-
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import org.apache.commons.lang3.tuple.Pair;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.interfaces.IClientTickHandler;
 import fi.dy.masa.malilib.mixin.entity.IMixinMerchantEntity;
@@ -61,7 +63,7 @@ public class OverlayRendererVillagerInfo extends OverlayRendererBase implements 
         {
             MiniHUD.debugLog("OverlayRendererVillagerInfo#reset() - dimension change or log-in");
             long now = System.currentTimeMillis();
-            this.lastTick =  - (this.getCacheTimeout() + 5000L);
+            this.lastTick = now - (this.getCacheTimeout() + 5000L);
             this.tickCache(now);
             this.lastTick = now;
         }
@@ -261,7 +263,7 @@ public class OverlayRendererVillagerInfo extends OverlayRendererBase implements 
                     {
                         if (tradeOffer.getSellItem().getItem() == Items.ENCHANTED_BOOK && tradeOffer.getFirstBuyItem().item().value() == Items.EMERALD)
                         {
-                            for (Object2IntMap.Entry<RegistryEntry<Enchantment>> entry : tradeOffer.getSellItem().getOrDefault(DataComponentTypes.STORED_ENCHANTMENTS, null).getEnchantmentEntries())
+                            for (Object2IntMap.Entry<RegistryEntry<Enchantment>> entry : tradeOffer.getSellItem().getOrDefault(DataComponentTypes.STORED_ENCHANTMENTS, ItemEnchantmentsComponent.DEFAULT).getEnchantmentEntries())
                             {
                                 int emeraldCost = tradeOffer.getFirstBuyItem().count();
 
@@ -431,8 +433,8 @@ public class OverlayRendererVillagerInfo extends OverlayRendererBase implements 
 
         for (String line : texts)
         {
-            RenderUtils.drawTextPlate(List.of(line), x, y, z, 0.02f);
-//            RenderUtils.drawTextPlate(List.of(line), x, y, z, entity.getYaw(), entity.getPitch(), 0.02f, 0xFFFFFFFF, 0x40000000, false);
+//            RenderUtils.drawTextPlate(List.of(line), x, y, z, 0.02f);
+            RenderUtils.drawTextPlate(List.of(line), x, y, z, entity.getYaw(), entity.getPitch(), 0.02f, 0xFFFFFFFF, 0x40000000, false);
             y -= 0.2;
         }
     }

@@ -4,13 +4,12 @@ import fi.dy.masa.malilib.network.IClientPayloadData;
 import fi.dy.masa.minihud.MiniHUD;
 import fi.dy.masa.minihud.util.DataStorage;
 import io.netty.buffer.Unpooled;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class ServuxStructuresPacket implements IClientPayloadData
 {
@@ -242,7 +241,7 @@ public class ServuxStructuresPacket implements IClientPayloadData
 
     public record Payload(ServuxStructuresPacket data) implements CustomPayload
     {
-        public static final Id<Payload> ID = new Id<>(ServuxStructuresHandler.CHANNEL_ID);
+        public static final CustomPayload.Id<Payload> ID = new CustomPayload.Id<>(ServuxStructuresHandler.CHANNEL_ID);
         public static final PacketCodec<PacketByteBuf, Payload> CODEC = CustomPayload.codecOf(Payload::write, Payload::new);
 
         public Payload(PacketByteBuf input)
@@ -256,7 +255,7 @@ public class ServuxStructuresPacket implements IClientPayloadData
         }
 
         @Override
-        public Id<Payload> getId()
+        public @Nonnull CustomPayload.Id<Payload> getId()
         {
             return ID;
         }

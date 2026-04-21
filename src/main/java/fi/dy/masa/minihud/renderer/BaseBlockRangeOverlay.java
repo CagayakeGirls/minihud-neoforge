@@ -2,7 +2,6 @@ package fi.dy.masa.minihud.renderer;
 
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
-
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.MinecraftClient;
@@ -15,7 +14,6 @@ import net.minecraft.util.profiler.Profiler;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.chunk.WorldChunk;
-
 import fi.dy.masa.malilib.config.IConfigBoolean;
 
 public abstract class BaseBlockRangeOverlay<T extends BlockEntity> extends OverlayRendererBase
@@ -195,6 +193,7 @@ public abstract class BaseBlockRangeOverlay<T extends BlockEntity> extends Overl
 
             if (distSq > max)
             {
+                this.expireBlockRange(mutablePos.toImmutable());
                 continue;
             }
 
@@ -208,6 +207,8 @@ public abstract class BaseBlockRangeOverlay<T extends BlockEntity> extends Overl
     protected abstract void updateBlockRange(World world, BlockPos pos, T be, Vec3d cameraPos, MinecraftClient mc, Profiler profiler);
 
     protected abstract void renderBlockRange(World world, Vec3d cameraPos, MinecraftClient mc, Profiler profiler);
+
+    protected abstract void expireBlockRange(BlockPos pos);
 
     protected abstract void resetBlockRange();
 }

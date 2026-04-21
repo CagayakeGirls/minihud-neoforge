@@ -3,13 +3,11 @@ package fi.dy.masa.minihud.renderer.shapes;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Vec3d;
-
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import fi.dy.masa.malilib.interfaces.IRangeChangeListener;
 import fi.dy.masa.malilib.util.data.Color4f;
 import fi.dy.masa.malilib.util.JsonUtils;
@@ -47,6 +45,7 @@ public abstract class ShapeBase extends OverlayRendererBase implements IRangeCha
         this.needsUpdate = true;
         this.renderLines = false;
         this.renderThroughShape = false;
+        this.useCulling = false;
     }
 
     @Override

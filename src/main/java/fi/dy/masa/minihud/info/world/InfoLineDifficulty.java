@@ -3,17 +3,16 @@ package fi.dy.masa.minihud.info.world;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
-
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.WorldChunk;
-
 import fi.dy.masa.minihud.Reference;
 import fi.dy.masa.minihud.config.InfoToggle;
 import fi.dy.masa.minihud.info.InfoLine;
 import fi.dy.masa.minihud.info.InfoLineChunkCache;
+import fi.dy.masa.minihud.info.InfoLineContext;
 
 public class InfoLineDifficulty extends InfoLine
 {
@@ -33,7 +32,7 @@ public class InfoLineDifficulty extends InfoLine
     public boolean succeededType() { return false; }
 
     @Override
-    public List<Entry> parse(@Nonnull Context ctx)
+    public List<Entry> parse(@Nonnull InfoLineContext ctx)
     {
         if (this.getClientWorld() == null || ctx.pos() == null)
         {

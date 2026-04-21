@@ -1,13 +1,11 @@
 package fi.dy.masa.minihud.renderer.shapes;
 
 import java.util.List;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import fi.dy.masa.malilib.util.JsonUtils;
 import fi.dy.masa.malilib.util.Quadrant;
 import fi.dy.masa.malilib.util.StringUtils;
@@ -99,8 +97,14 @@ public class ShapeSpawnSphere extends ShapeSphereBlocky
     public JsonObject toJson()
     {
         JsonObject obj = super.toJson();
-        obj.add("margin", new JsonPrimitive(this.margin));
-        return obj;
+
+		if (obj != null)
+		{
+			obj.add("margin", new JsonPrimitive(this.margin));
+			return obj;
+		}
+
+		return new JsonObject();
     }
 
     @Override

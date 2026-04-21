@@ -3,16 +3,15 @@ package fi.dy.masa.minihud.info.state;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
-
 import fi.dy.masa.malilib.util.game.BlockUtils;
 import fi.dy.masa.minihud.Reference;
 import fi.dy.masa.minihud.config.InfoToggle;
 import fi.dy.masa.minihud.info.InfoLine;
+import fi.dy.masa.minihud.info.InfoLineContext;
 
 public class InfoLineBlockProps extends InfoLine
 {
@@ -32,7 +31,7 @@ public class InfoLineBlockProps extends InfoLine
     public boolean succeededType() { return false; }
 
     @Override
-    public List<Entry> parse(@Nonnull Context ctx)
+    public List<Entry> parse(@Nonnull InfoLineContext ctx)
     {
         if (ctx.world() == null) return null;
 

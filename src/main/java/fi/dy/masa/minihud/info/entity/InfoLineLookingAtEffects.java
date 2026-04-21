@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -14,11 +13,11 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.world.World;
-
 import fi.dy.masa.malilib.util.nbt.NbtEntityUtils;
 import fi.dy.masa.minihud.Reference;
 import fi.dy.masa.minihud.config.InfoToggle;
 import fi.dy.masa.minihud.info.InfoLine;
+import fi.dy.masa.minihud.info.InfoLineContext;
 import fi.dy.masa.minihud.util.MiscUtils;
 
 public class InfoLineLookingAtEffects extends InfoLine
@@ -39,7 +38,7 @@ public class InfoLineLookingAtEffects extends InfoLine
     public boolean succeededType() { return false; }
 
     @Override
-    public List<Entry> parse(@Nonnull InfoLine.Context ctx)
+    public List<Entry> parse(@Nonnull InfoLineContext ctx)
     {
         if (ctx.world() == null) return null;
 

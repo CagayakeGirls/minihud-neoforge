@@ -1,16 +1,16 @@
-package fi.dy.masa.minihud.mixin;
+package fi.dy.masa.minihud.mixin.client;
 
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.util.Language;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import java.util.Map;
+import net.minecraft.util.Language;
 
 @Mixin(Language.class)
 public class MixinLanguage
@@ -24,7 +24,8 @@ public class MixinLanguage
     )
     private static void loadCustomText(Args args, @Local Map.Entry<String, JsonElement> entry)
     {
-        if (args.<String>get(0).startsWith("minihud.") && entry.getValue() instanceof JsonPrimitive primitive)
+        if (args.<String>get(0).startsWith("minihud.") &&
+	        entry.getValue() instanceof JsonPrimitive primitive)
         {
             args.set(1, primitive.getAsString());
         }
