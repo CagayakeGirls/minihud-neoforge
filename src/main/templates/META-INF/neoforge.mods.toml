@@ -1,0 +1,55 @@
+modLoader="javafml"
+loaderVersion="${fml_version_range}"
+license="LGPLv3"
+issueTrackerURL="${mod_link}/issues"
+
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+displayURL="${mod_link}"
+logoFile="icon.png"
+credits="masa"
+authors="TexTrue, CagayakeGirls"
+description='''
+MiniHUD unofficial NeoForge port. Configurable "mini-F3" info lines, and various overlay renderers
+'''
+
+[[mods]]
+modId="minihud"
+version="${mod_version}"
+displayName="MiniHUD Stub"
+logoFile="assets/minihud/icon.png"
+credits="masa"
+authors="TexTrue, CagayakeGirls"
+description='''
+MiniHUD Stub.
+Configurable "mini-F3" info lines, and various overlay renderers
+'''
+
+[[mixins]]
+config="mixins.minihud.json"
+
+[[dependencies."${mod_id}"]]
+modId="neoforge"
+type="required"
+versionRange="${neoforge_version_range}"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies."${mod_id}"]]
+modId="minecraft"
+type="required"
+versionRange="${minecraft_version_range}"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies."${mod_id}"]]
+modId="mafglib"
+type="required"
+versionRange="${mafglib_version_range}"
+ordering="NONE"
+side="BOTH"
+
+[[foxified.classtweaker]]
+file="minihud.accesswidener"
