@@ -1,7 +1,7 @@
 [versions]
 range-fml = "[4,)"
-range-game = "[1.21.11,)"
-range-neoforge = "[21.11,)"
+range-game = "[1.21.9,)"
+range-neoforge = "[21.9,)"
 range-mafglib = "[0.4,)"
 
 mod-link = "https://github.com/CagayakeGirls/minihud-neoforge"
