@@ -6,6 +6,7 @@ plugins {
 }
 
 repositories {
+	mavenLocal()
 	maven {url = "https://masa.dy.fi/maven/sakura-ryoko"
 		content {includeGroupAndSubgroups("fi.dy.masa")}
 	}
