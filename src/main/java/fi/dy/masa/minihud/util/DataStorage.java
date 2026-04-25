@@ -70,6 +70,7 @@ public class DataStorage
     private final MobCapDataHandler mobCapData = new MobCapDataHandler();
     private final static ServuxStructuresHandler<ServuxStructuresPacket.Payload> HANDLER = ServuxStructuresHandler.getInstance();
     private boolean carpetServer = false;
+    private boolean betterTabServer = false;
     private boolean servuxServer = false;
     private boolean hasServuxTickData = false;
     private boolean hasInValidServux = false;
@@ -1028,6 +1029,43 @@ public class DataStorage
         if (this.hasServuxTickData())
         {
             this.carpetServer = false;
+            return;
+        }
+
+        if (textComponent.getString().isEmpty() == false)
+        {
+            String text = Formatting.strip(textComponent.getString());
+            String[] lines = text.split("\n");
+
+            for (String line : lines)
+            {
+                Matcher matcher = PATTERN_CARPET_TPS.matcher(line);
+
+                if (matcher.matches())
+                {
+                    try
+                    {
+                        this.serverTPS = Double.parseDouble(matcher.group("tps"));
+                        this.serverMSPT = Double.parseDouble(matcher.group("mspt"));
+                        this.serverTPSValid = true;
+                        this.carpetServer = true;
+                        return;
+                    }
+                    catch (NumberFormatException ignore) {}
+                }
+            }
+        }
+    }
+
+    /**
+     * BetterTab's server data support
+     * @param textComponent
+     */
+    public void handleBetterTabServerData(Text textComponent) {
+        // Don't update from BetterTab if we are using Servux
+        if (this.hasServuxTickData())
+        {
+            this.betterTabServer = false;
             return;
         }
 
