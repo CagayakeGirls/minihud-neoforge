@@ -45,6 +45,7 @@ public abstract class MixinClientPlayNetworkHandler
     @Inject(method = "onPlayerListHeader", at = @At("RETURN"))
     private void minihud_onHandlePlayerListHeaderFooter(PlayerListHeaderS2CPacket packetIn, CallbackInfo ci)
     {
+        DataStorage.getInstance().handleBetterTabServerData(packetIn.footer());
         DataStorage.getInstance().handleCarpetServerTPSData(packetIn.footer());
         DataStorage.getInstance().getMobCapData().parsePlayerListFooterMobCapData(packetIn.footer());
     }

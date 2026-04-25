@@ -70,6 +70,7 @@ public class DataStorage
     private final MobCapDataHandler mobCapData = new MobCapDataHandler();
     private final static ServuxStructuresHandler<ServuxStructuresPacket.Payload> HANDLER = ServuxStructuresHandler.getInstance();
     private boolean carpetServer = false;
+    private boolean betterTabServer = false;
     private boolean servuxServer = false;
     private boolean hasServuxTickData = false;
     private boolean hasInValidServux = false;
@@ -153,6 +154,7 @@ public class DataStorage
             this.structureDataTimeout = 30 * 20;
             this.registryManager = DynamicRegistryManager.EMPTY;
             this.carpetServer = false;
+            this.betterTabServer = false;
             this.hasServuxTickData = false;
             this.setHasIntegratedServer(false, null);
         }
@@ -355,6 +357,11 @@ public class DataStorage
     public boolean hasCarpetServer()
     {
         return this.carpetServer;
+    }
+
+    public boolean hasBetterTabServer()
+    {
+        return this.betterTabServer;
     }
 
     public boolean hasServuxServer() { return this.servuxServer; }
@@ -619,6 +626,7 @@ public class DataStorage
         // and for single player the data is grabbed directly from the integrated server.
         if (this.carpetServer == false &&
             this.hasServuxTickData == false &&
+            this.betterTabServer == false &&
             this.mc.isInSingleplayer() == false)
         {
             long currentTime = System.nanoTime();
@@ -1048,6 +1056,42 @@ public class DataStorage
                         this.serverMSPT = Double.parseDouble(matcher.group("mspt"));
                         this.serverTPSValid = true;
                         this.carpetServer = true;
+                        return;
+                    }
+                    catch (NumberFormatException ignore) {}
+                }
+            }
+        }
+    }
+
+    /**
+     * BetterTab's server data support
+     */
+    public void handleBetterTabServerData(Text textComponent) {
+        // Don't update from BetterTab if we are using Servux
+        if (this.hasServuxTickData())
+        {
+            this.betterTabServer = false;
+            return;
+        }
+
+        if (textComponent.getString().isEmpty() == false)
+        {
+            String text = Formatting.strip(textComponent.getString());
+            String[] lines = text.split("\n");
+
+            for (String line : lines)
+            {
+                Matcher matcher = PATTERN_CARPET_TPS.matcher(line);
+
+                if (matcher.matches())
+                {
+                    try
+                    {
+                        this.serverTPS = Double.parseDouble(matcher.group("tps"));
+                        this.serverMSPT = Double.parseDouble(matcher.group("mspt"));
+                        this.serverTPSValid = true;
+                        this.betterTabServer = true;
                         return;
                     }
                     catch (NumberFormatException ignore) {}

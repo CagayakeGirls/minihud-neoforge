@@ -121,7 +121,7 @@ public class InfoLineServerTPS extends InfoLine
                 list.add(this.of(builder.toString()));
             }
             // Carpet server and integrated server have actual meaningful MSPT data available
-            else if (this.getData().hasCarpetServer() || this.getData().isSinglePlayer())
+            else if (this.getData().hasCarpetServer() || this.getData().hasBetterTabServer() || this.getData().isSinglePlayer())
             {
                 if      (mspt <= 40) { preMspt = GuiBase.TXT_GREEN; }
                 else if (mspt <= 45) { preMspt = GuiBase.TXT_YELLOW; }
