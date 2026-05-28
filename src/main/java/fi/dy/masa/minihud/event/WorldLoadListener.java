@@ -17,6 +17,7 @@ import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.malilib.util.data.json.JsonUtils;
 import fi.dy.masa.minihud.MiniHUD;
 import fi.dy.masa.minihud.Reference;
+import fi.dy.masa.minihud.config.Configs;
 import fi.dy.masa.minihud.data.DebugDataManager;
 import fi.dy.masa.minihud.data.EntitiesDataManager;
 import fi.dy.masa.minihud.data.HudDataManager;
@@ -46,11 +47,13 @@ public class WorldLoadListener implements IWorldLoadListener
             // Quitting to main menu
             if (worldAfter == null)
             {
+                WorkerDaemonHandler.INSTANCE.endAll();
                 this.writeDataGlobal();
             }
         }
         if (worldAfter != null)
         {
+            WorkerDaemonHandler.INSTANCE.resetForceStop();
             DataStorage.getInstance().onWorldPre();
             HudDataManager.getInstance().onWorldPre();
             EntitiesDataManager.getInstance().onWorldPre();
@@ -76,8 +79,10 @@ public class WorldLoadListener implements IWorldLoadListener
             if (worldBefore == null)
             {
                 this.readStoredDataGlobal();
+                WorkerDaemonHandler.INSTANCE.start();
             }
 
+            Configs.checkBaseLanguage();
             this.readStoredDataPerDimension();
             OverlayRenderer.resetRenderTimeout();
             DataStorage.getInstance().onWorldJoin();
@@ -85,7 +90,6 @@ public class WorldLoadListener implements IWorldLoadListener
             HudDataManager.getInstance().onWorldJoin();
             EntitiesDataManager.getInstance().onWorldJoin();
             DebugDataManager.getInstance().onWorldJoin();
-            WorkerDaemonHandler.INSTANCE.start();
         }
     }
 

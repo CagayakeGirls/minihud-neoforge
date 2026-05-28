@@ -3,6 +3,7 @@ package fi.dy.masa.minihud.config;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -13,8 +14,13 @@ import fi.dy.masa.malilib.config.options.*;
 import fi.dy.masa.malilib.hotkeys.IHotkey;
 import fi.dy.masa.malilib.hotkeys.KeyAction;
 import fi.dy.masa.malilib.hotkeys.KeybindSettings;
+import fi.dy.masa.malilib.registry.Registry;
 import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.data.json.JsonUtils;
+import fi.dy.masa.malilib.util.i18n.i18nConfig;
+import fi.dy.masa.malilib.util.i18n.i18nManager;
+import fi.dy.masa.malilib.util.i18n.i18nMode;
+import fi.dy.masa.malilib.util.i18n.i18nOption;
 import fi.dy.masa.malilib.util.time.DurationFormat;
 import fi.dy.masa.malilib.util.time.TimeFormat;
 import fi.dy.masa.minihud.MiniHUD;
@@ -27,6 +33,7 @@ import fi.dy.masa.minihud.util.*;
 public class Configs implements IConfigHandler
 {
     private static final String CONFIG_FILE_NAME = Reference.MOD_ID + ".json";
+    public static final Optional<i18nManager> LANG = Optional.ofNullable(i18nManager.create(Reference.MOD_ID));
     private static final int CONFIG_VERSION = 1;
 
     private static final String GENERIC_KEY = Reference.MOD_ID+".config.generic";
@@ -76,7 +83,7 @@ public class Configs implements IConfigHandler
         public static final ConfigFloat         ENTITY_DATA_SYNC_CACHE_TIMEOUT      = new ConfigFloat("entityDataSyncCacheTimeout", 2.75f, 1.0f, 25.0f).apply(GENERIC_KEY);
 //        public static final ConfigBoolean       ENTITY_DATA_LOAD_NBT                = new ConfigBoolean("entityDataSyncLoadNbt", false).apply(GENERIC_KEY);
         //public static final ConfigBoolean       FIX_VANILLA_DEBUG_RENDERERS         = new ConfigBoolean("enableVanillaDebugRendererFix", true).apply(GENERIC_KEY);
-        public static final ConfigBoolean       FIX_VANILLA_DEBUG_RENDERER_THROUGH  = new ConfigBoolean("enableVanillaDebugRenderThroughFix", true).apply(GENERIC_KEY);
+//        public static final ConfigBoolean       FIX_VANILLA_DEBUG_RENDERER_THROUGH  = new ConfigBoolean("enableVanillaDebugRenderThroughFix", true).apply(GENERIC_KEY);
         public static final ConfigDouble        FONT_SCALE                          = new ConfigDouble("fontScale", 0.5, 0.01, 100.0).apply(GENERIC_KEY);
         public static final ConfigOptionList    HUD_ALIGNMENT                       = new ConfigOptionList("hudAlignment", HudAlignment.TOP_LEFT).apply(GENERIC_KEY);
         public static final ConfigBooleanHotkeyed HUD_DATA_SYNC                     = new ConfigBooleanHotkeyed("hudDataSync", false, "").apply(GENERIC_KEY);
@@ -140,6 +147,8 @@ public class Configs implements IConfigHandler
         public static final ConfigInteger       TEXT_POS_Y                          = new ConfigInteger("textPosY", 4, 0, 8192).apply(GENERIC_KEY);
         public static final ConfigInteger       TIME_DAY_DIVISOR                    = new ConfigInteger("timeDayDivisor", 24000, 1, Integer.MAX_VALUE).apply(GENERIC_KEY);
         public static final ConfigInteger       TIME_TOTAL_DIVISOR                  = new ConfigInteger("timeTotalDivisor", 24000, 1, Integer.MAX_VALUE).apply(GENERIC_KEY);
+        public static final ConfigOptionList    TRANSLATION_LANGUAGE                = new ConfigOptionList("translationLanguage", new i18nConfig(LANG.orElseThrow())).apply(GENERIC_KEY);
+        public static final ConfigOptionList    TRANSLATION_MODE                    = new ConfigOptionList("translationMode", i18nMode.FOLLOW_VANILLA).apply(GENERIC_KEY);
         public static final ConfigBoolean       USE_CUSTOMIZED_COORDINATES          = new ConfigBoolean("useCustomizedCoordinateFormat", true).apply(GENERIC_KEY);
         public static final ConfigBoolean       USE_FONT_SHADOW                     = new ConfigBoolean("useFontShadow", false).apply(GENERIC_KEY);
         public static final ConfigBoolean       USE_TEXT_BACKGROUND                 = new ConfigBoolean("useTextBackground", true).apply(GENERIC_KEY);
@@ -150,6 +159,7 @@ public class Configs implements IConfigHandler
         public static final ConfigBoolean       VILLAGER_OFFER_LOWEST_PRICE_NEARBY  = new ConfigBoolean("villagerOfferLowestPriceNearby" , false).apply(GENERIC_KEY);
         public static final ConfigDouble        VILLAGER_OFFER_PRICE_THRESHOLD      = new ConfigDouble("villagerOfferPriceThreshold", 1, 0, 1).apply(GENERIC_KEY);
         public static final ConfigFloat         VILLAGER_TEXT_SCALE                 = new ConfigFloat("villagerTextScale", 2.0f, 0.5F, 5.0F).apply(GENERIC_KEY);
+//        public static final ConfigOptionList    WORKER_THREAD_PROFILE               = new ConfigOptionList("workerThreadProfile", WorkerThreadProfile.DEFAULT).apply(GENERIC_KEY);
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
                 AXOLOTL_TOOLTIPS,
@@ -186,7 +196,7 @@ public class Configs implements IConfigHandler
 //                ENTITY_DATA_LOAD_NBT,
 //                INFO_LINES_USES_NBT,
                 //FIX_VANILLA_DEBUG_RENDERERS,
-                FIX_VANILLA_DEBUG_RENDERER_THROUGH,
+//                FIX_VANILLA_DEBUG_RENDERER_THROUGH,
                 LIGHT_LEVEL_AUTO_HEIGHT,
                 LIGHT_LEVEL_COLLISION_CHECK,
                 LIGHT_LEVEL_COLORED_NUMBERS,
@@ -214,9 +224,12 @@ public class Configs implements IConfigHandler
                 STRUCTURES_RENDER_THROUGH,
                 STRUCTURES_RENDER_OUTLINES,
                 STRUCTURES_RENDER_OUTLINES_WHITE,
+                TRANSLATION_LANGUAGE,
+                TRANSLATION_MODE,
                 USE_CUSTOMIZED_COORDINATES,
                 USE_FONT_SHADOW,
                 USE_TEXT_BACKGROUND,
+//                WORKER_THREAD_PROFILE,
 
                 MAIN_RENDERING_TOGGLE,
                 MOVE_SHAPE_TO_PLAYER,
@@ -419,7 +432,7 @@ public class Configs implements IConfigHandler
 
                 if (Reference.DEBUG_MODE)
                 {
-                    MiniHUD.debugLogError("loadFromFile(): Successfully loaded config file '{}'.", configFile.toAbsolutePath());
+                    MiniHUD.LOGGER.warn("loadFromFile(): Successfully loaded config file '{}'.", configFile.toAbsolutePath());
                 }
             }
             else
@@ -427,6 +440,7 @@ public class Configs implements IConfigHandler
                 MiniHUD.LOGGER.error("loadFromFile(): Failed to load config file '{}'.", configFile.toAbsolutePath());
             }
 
+            checkBaseLanguage();
             OverlayRendererLightLevel.INSTANCE.setRenderThrough(Configs.Generic.LIGHT_LEVEL_RENDER_THROUGH.getBooleanValue());
             OverlayRendererStructures.INSTANCE.setRenderThrough(Configs.Generic.STRUCTURES_RENDER_THROUGH.getBooleanValue());
 	        DebugDataManager.getInstance().onConfigSync();
@@ -443,7 +457,7 @@ public class Configs implements IConfigHandler
 
             if (Reference.DEBUG_MODE)
             {
-                MiniHUD.debugLogError("saveToFile(): Creating directory '{}'.", dir.toAbsolutePath());
+                MiniHUD.LOGGER.warn("saveToFile(): Creating directory '{}'.", dir.toAbsolutePath());
             }
         }
 
@@ -488,5 +502,86 @@ public class Configs implements IConfigHandler
     public void save()
     {
         saveToFile();
+    }
+
+    @Override
+    public void onLanguageChanged(String newLang)
+    {
+        checkBaseLanguage();
+    }
+
+    // Attempts to load the same language file as MaLiLib; where available -- on occasion
+    public static void checkBaseLanguage()
+    {
+        i18nMode mode = (i18nMode) Generic.TRANSLATION_MODE.getOptionListValue();
+
+        if (mode == i18nMode.FOLLOW_MALILIB)
+        {
+            LANG.ifPresent(
+                    i18nManager ->
+                    {
+                        String baseKey = Registry.TRANSLATION_OVERRIDE_MANAGER.getBaseLanguageCode();
+
+                        // Try setting language if it doesn't match
+                        if (!i18nManager.getLang().getLangCode().equalsIgnoreCase(baseKey))
+                        {
+                            List<i18nOption> list = i18nManager.getLanguageOptions();
+                            boolean found = false;
+
+                            for (i18nOption entry : list)
+                            {
+                                if (entry.getKey().equalsIgnoreCase(baseKey))
+                                {
+                                    i18nManager.setLang(baseKey);
+                                    i18nConfig newConfig = new i18nConfig(i18nManager).fromString(baseKey);
+                                    Generic.TRANSLATION_LANGUAGE.setOptionListValue(newConfig);
+                                    found = true;
+                                    break;
+                                }
+                            }
+
+                            if (!found)
+                            {
+                                i18nManager.resetLangToDefault();
+                                Generic.TRANSLATION_LANGUAGE.resetToDefault();
+                            }
+                        }
+                    }
+            );
+        }
+        else if (mode == i18nMode.FOLLOW_VANILLA)
+        {
+            LANG.ifPresent(
+                    i18nManager ->
+                    {
+                        String vanCode = Registry.TRANSLATION_OVERRIDE_MANAGER.getVanillaLanguageCode();
+
+                        // Try setting language if it doesn't match
+                        if (!i18nManager.getLang().getLangCode().equalsIgnoreCase(vanCode))
+                        {
+                            List<i18nOption> list = i18nManager.getLanguageOptions();
+                            boolean found = false;
+
+                            for (i18nOption entry : list)
+                            {
+                                if (entry.getKey().equalsIgnoreCase(vanCode))
+                                {
+                                    i18nManager.setLang(vanCode);
+                                    i18nConfig newConfig = new i18nConfig(i18nManager).fromString(vanCode);
+                                    Generic.TRANSLATION_LANGUAGE.setOptionListValue(newConfig);
+                                    found = true;
+                                    break;
+                                }
+                            }
+
+                            if (!found)
+                            {
+                                i18nManager.resetLangToDefault();
+                                Generic.TRANSLATION_LANGUAGE.resetToDefault();
+                            }
+                        }
+                    }
+            );
+        }
     }
 }

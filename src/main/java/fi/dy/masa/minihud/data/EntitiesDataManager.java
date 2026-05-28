@@ -171,12 +171,12 @@ public class EntitiesDataManager implements IClientTickHandler, IDataSyncer
 
                     if (this.hasServuxServer())
                     {
-                        requestServuxBlockEntityData(pos);
+                        this.requestServuxBlockEntityData(pos);
                     }
                     else if (this.shouldUseQuery())
                     {
                         // Only check once if we have OP
-                        requestQueryBlockEntity(pos);
+                        this.requestQueryBlockEntity(pos);
                     }
                 }
 
@@ -188,11 +188,11 @@ public class EntitiesDataManager implements IClientTickHandler, IDataSyncer
 
                     if (this.hasServuxServer())
                     {
-                        requestServuxEntityData(entityId);
+                        this.requestServuxEntityData(entityId);
                     }
                     else if (this.shouldUseQuery())
                     {
-                        requestQueryEntityData(entityId);
+                        this.requestQueryEntityData(entityId);
                     }
                 }
             }
@@ -494,7 +494,7 @@ public class EntitiesDataManager implements IClientTickHandler, IDataSyncer
     public void requestMetadata()
     {
         if (!DataStorage.getInstance().hasIntegratedServer() &&
-                Configs.Generic.ENTITY_DATA_SYNC.getBooleanValue())
+            Configs.Generic.ENTITY_DATA_SYNC.getBooleanValue())
         {
             CompoundTag nbt = new CompoundTag();
             nbt.putString("version", Reference.MOD_STRING);
@@ -683,7 +683,6 @@ public class EntitiesDataManager implements IClientTickHandler, IDataSyncer
 
                 if (!data.isEmpty())
                 {
-//                    nbt.putString("id", id.toString());
                     Pair<Entity, CompoundData> pair = Pair.of(entity, data);
 
                     synchronized (this.entityCache)
@@ -739,6 +738,7 @@ public class EntitiesDataManager implements IClientTickHandler, IDataSyncer
                             if (!world.hasChunkAt(posAdj)) return null;
                             BlockState stateAdj = world.getBlockState(posAdj);
 
+                            // FIXME -- don't use the raw BlockEntity
                             var dataAdj = this.getFromBlockEntityCache(posAdj);
 
                             if (dataAdj == null)
@@ -928,9 +928,12 @@ public class EntitiesDataManager implements IClientTickHandler, IDataSyncer
                 this.blockEntityCache.put(pos, Pair.of(System.currentTimeMillis(), Pair.of(blockEntity, data)));
             }
 
-            NbtView view = NbtView.getReader(data, this.getClientWorld().registryAccess());
+            if (blockEntity instanceof Container)
+            {
+                NbtView view = NbtView.getReader(data, this.getClientWorld().registryAccess());
+                blockEntity.loadWithComponents(view.getReader());
+            }
 
-            blockEntity.loadWithComponents(view.getReader());
             return blockEntity;
         }
 

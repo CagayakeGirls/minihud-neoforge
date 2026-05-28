@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 
 import fi.dy.masa.malilib.interfaces.IThreadDaemonHandler;
 import fi.dy.masa.malilib.util.MathUtils;
+import fi.dy.masa.malilib.util.thread.ThreadExecutorPair;
 import fi.dy.masa.minihud.MiniHUD;
 import fi.dy.masa.minihud.Reference;
 
@@ -22,9 +23,10 @@ public class WorkerDaemonHandler implements IThreadDaemonHandler<AbstractWorkerT
 	private boolean useVirtual = false;
 	private final String namePrefix = Reference.MOD_NAME+" Worker Thread";
 	private final int threadCount = this.calculateMaxThreads();
-	private final ConcurrentHashMap<String, Thread> threadMap = this.builder();
+	private final ConcurrentHashMap<String, ThreadExecutorPair<AbstractWorkerTask<?>>> threadMap = this.builder();
 	private final PriorityBlockingQueue<AbstractWorkerTask<?>> queue = Queues.newPriorityBlockingQueue();
 	private long lastTick;
+	private boolean forceStop = false;
 
 	private int calculateMaxThreads()
 	{
@@ -34,9 +36,9 @@ public class WorkerDaemonHandler implements IThreadDaemonHandler<AbstractWorkerT
 		return MathUtils.clamp(result, 1, MAX_PLATFORM_THREADS);
 	}
 
-	private ConcurrentHashMap<String, Thread> builder()
+	private ConcurrentHashMap<String, ThreadExecutorPair<AbstractWorkerTask<?>>> builder()
 	{
-		ConcurrentHashMap<String, Thread> threads = new ConcurrentHashMap<>(this.threadCount, 0.9f, 1);
+		ConcurrentHashMap<String, ThreadExecutorPair<AbstractWorkerTask<?>>> threads = new ConcurrentHashMap<>(this.threadCount, 0.9f, 1);
 
 		for (int i = 0; i < this.threadCount; i++)
 		{
@@ -61,14 +63,18 @@ public class WorkerDaemonHandler implements IThreadDaemonHandler<AbstractWorkerT
 	@Override
 	public void start()
 	{
+		if (this.forceStop) { return; }
+		// , this.getProfile().getDisplayName()
 		MiniHUD.LOGGER.info("Starting [{}] Worker Daemon threads", this.threadMap.size());
 		Set<String> keys = this.threadMap.keySet();
 
 		for (String key : keys)
 		{
+			ThreadExecutorPair<AbstractWorkerTask<?>> pair = this.threadMap.get(key);
+
 			try
 			{
-				this.safeStart(this.threadMap.get(key));
+				this.safeStart(pair);
 			}
 			catch (ConcurrentModificationException cme)
 			{
@@ -77,12 +83,12 @@ public class WorkerDaemonHandler implements IThreadDaemonHandler<AbstractWorkerT
 			catch (IllegalStateException is)
 			{
 				// Terminated
-				Thread entry = this.threadFactory(key, this.useVirtual, new WorkerDaemonExecutor());
-				entry.start();
+				pair = this.threadFactory(key, this.useVirtual, new WorkerDaemonExecutor());
+				pair.thread().start();
 
 				synchronized (this.threadMap)
 				{
-					this.threadMap.replace(key, entry);
+					this.threadMap.replace(key, pair);
 				}
 			}
 			catch (RuntimeException re)
@@ -101,9 +107,11 @@ public class WorkerDaemonHandler implements IThreadDaemonHandler<AbstractWorkerT
 
 		for (String key : keys)
 		{
+			ThreadExecutorPair<AbstractWorkerTask<?>> pair = this.threadMap.get(key);
+
 			try
 			{
-				this.safeStop(this.threadMap.get(key));
+				this.safeStop(pair);
 			}
 			catch (ConcurrentModificationException cme)
 			{
@@ -169,6 +177,7 @@ public class WorkerDaemonHandler implements IThreadDaemonHandler<AbstractWorkerT
 	@Override
 	public void onClientTick(Minecraft mc)
 	{
+		if (this.forceStop) { return; }
 		final long now = System.currentTimeMillis();
 
 		if ((now - this.lastTick) > this.getTaskInterval())
@@ -188,29 +197,55 @@ public class WorkerDaemonHandler implements IThreadDaemonHandler<AbstractWorkerT
 
 		if (count > 0)
 		{
-			MiniHUD.debugLogError("WorkerDaemonHandler: {} tasks detected --> checking Thread states", count);
+			MiniHUD.debugLog("WorkerDaemonHandler: {} tasks detected --> checking Thread states", count);
 			Set<String> keySet = this.threadMap.keySet();
 
 			for (String key : keySet)
 			{
+				ThreadExecutorPair<AbstractWorkerTask<?>> pair = this.threadMap.get(key);
+
 				try
 				{
-					this.safeStart(this.threadMap.get(key));
+					this.safeStart(pair);
 				}
 				catch (IllegalStateException is)
 				{
 					// Terminated (Replace)
-					Thread entry = this.threadFactory(key, this.useVirtual, new WorkerDaemonExecutor());
-					entry.start();
+					pair = this.threadFactory(key, this.useVirtual, new WorkerDaemonExecutor());
+					pair.thread().start();
 
 					synchronized (this.threadMap)
 					{
-						this.threadMap.replace(key, entry);
+						this.threadMap.replace(key, pair);
 					}
 				}
 				catch (RuntimeException ignored) {}
 			}
 		}
+	}
+
+	public void resetForceStop()
+	{
+		this.forceStop = false;
+	}
+
+	protected boolean isForceStop()
+	{
+		return this.forceStop;
+	}
+
+	@Override
+	public void endAll()
+	{
+		this.forceStop = true;
+		this.reset();
+		this.stop();
+	}
+
+	private void gc()
+	{
+		MiniHUD.debugLog("WorkerDaemonHandler: Executing Garbage collection");
+		System.gc();
 	}
 
 	@Override
