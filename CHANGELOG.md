@@ -1,2 +1,3 @@
 ## Changelog
-- port to 26.1.1 NeoForge
+- port to 26.1.2 NeoForge
+- sync upstream `26.1.2-0.39.5`
