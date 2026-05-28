@@ -7,7 +7,7 @@ range-mafglib = "[0.4,)"
 mod-link = "https://github.com/CagayakeGirls/minihud-neoforge"
 
 version-env = "client"
-version-type = "release"
+version-type = "beta"
 
 platformId-curseforge = "916504"
 platformId-modrinth = "zfPoD7Tm"
