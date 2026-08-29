@@ -34,6 +34,7 @@ import fi.dy.masa.malilib.interfaces.IClientTickHandler;
 import fi.dy.masa.malilib.mixin.entity.IMixinMerchantEntity;
 import fi.dy.masa.malilib.render.RenderUtils;
 import fi.dy.masa.malilib.util.WorldUtils;
+import fi.dy.masa.malilib.util.text.TextAlignment;
 import fi.dy.masa.malilib.util.data.DataEntityUtils;
 import fi.dy.masa.malilib.util.data.tag.CompoundData;
 import fi.dy.masa.malilib.util.nbt.NbtKeys;
@@ -460,7 +461,7 @@ public class OverlayRendererVillagerInfo extends OverlayRendererBase implements 
             if (jobSite != null && jobSite.isPresent())
             {
                 BlockPos pos = jobSite.get().pos();
-                if (targetPos.distanceTo(pos.getCenter()) < 1.7)
+                if (targetPos.distanceTo(Vec3.atCenterOf(pos)) < 1.7)
                 {
                     x = pos.getX() + 0.5;
                     z = pos.getZ() + 0.5;
@@ -479,7 +480,7 @@ public class OverlayRendererVillagerInfo extends OverlayRendererBase implements 
                 final float scale = Configs.Generic.VILLAGER_TEXT_SCALE.getFloatValue() * 0.01F;
 //                RenderUtils.drawTextPlate(List.of(line), x, y, z, 0.02f);
 //                RenderUtils.drawTextPlate(List.of(line), x, y, z, cam.getYRot(delta), cam.getXRot(delta), scale, 0xFFFFFFFF, 0x40000000, this.renderThrough);
-                RenderUtils.drawTextPlate(List.of(line), x, y, z, cam.getYRot(), cam.getXRot(), scale, 0xFFFFFFFF, 0x40000000, this.renderThrough);
+                RenderUtils.drawTextPlate(List.of(line), x, y, z, cam.getYRot(), cam.getXRot(), scale, TextAlignment.CENTER, 0xFFFFFFFF, 0x40000000, this.renderThrough);
                 y -= 0.2;
             }
         }

@@ -1,7 +1,7 @@
 [versions]
 range-fml = "[4,)"
-range-game = "[26.1,)"
-range-neoforge = "[26.1,)"
+range-game = "[26.2,)"
+range-neoforge = "[26.2,)"
 range-mafglib = "[0.4,)"
 
 mod-link = "https://github.com/CagayakeGirls/minihud-neoforge"
@@ -12,7 +12,7 @@ version-type = "beta"
 platformId-curseforge = "916504"
 platformId-modrinth = "zfPoD7Tm"
 
-architectury-loom = "1.14-SNAPSHOT"
+architectury-loom = "1.17-SNAPSHOT"
 modpublisher = "2.+"
 
 [plugins]

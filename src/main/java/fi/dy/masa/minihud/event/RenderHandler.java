@@ -137,7 +137,7 @@ public class RenderHandler implements IRenderer
         }
 
 		if (DebugDataManager.getInstance().shouldShowDebugHudFix() == false &&
-            mc.player != null && mc.options.hideGui == false &&
+            mc.player != null && mc.gui.hud.isHidden() == false &&
             (Configs.Generic.REQUIRE_SNEAK.getBooleanValue() == false || mc.player.isShiftKeyDown()) &&
             Configs.Generic.REQUIRED_KEY.getKeybind().isKeybindHeld())
         {
@@ -175,7 +175,7 @@ public class RenderHandler implements IRenderer
 //    public void onExtractWorldPreWeather(DeltaTracker deltaTracker, Camera camera, float ticks, ProfilerFiller profiler)
 //    {
 //        if (Configs.Generic.MAIN_RENDERING_TOGGLE.getBooleanValue() &&
-//            this.mc.level != null && this.mc.player != null && this.mc.options.hideGui == false)
+//            this.mc.level != null && this.mc.player != null && this.mc.gui.hud.isHidden() == false)
 //        {
 //            OverlayRenderer.extractOverlays(this.mc, deltaTracker, camera, ticks, profiler);
 //        }
@@ -185,7 +185,7 @@ public class RenderHandler implements IRenderer
 //    public void onRenderWorldPreWeather(RenderTarget fb, Matrix4fc modelViewMatrix, CameraRenderState cameraState, Frustum culling, RenderBuffers buffers, GpuBufferSlice terrainFog, Vector4f fogColor, ProfilerFiller profiler)
 //    {
 //        if (Configs.Generic.MAIN_RENDERING_TOGGLE.getBooleanValue() &&
-//            this.mc.level != null && this.mc.player != null && this.mc.options.hideGui == false)
+//            this.mc.level != null && this.mc.player != null && this.mc.gui.hud.isHidden() == false)
 //        {
 //            OverlayRenderer.renderOverlays(modelViewMatrix, this.mc, culling, cameraState, profiler);
 //        }
@@ -195,7 +195,7 @@ public class RenderHandler implements IRenderer
     public void onExtractWorldLast(DeltaTracker deltaTracker, Camera camera, float ticks, ProfilerFiller profiler)
     {
         if (Configs.Generic.MAIN_RENDERING_TOGGLE.getBooleanValue() &&
-            this.mc.level != null && this.mc.player != null && this.mc.options.hideGui == false)
+            this.mc.level != null && this.mc.player != null && this.mc.gui.hud.isHidden() == false)
         {
             OverlayRenderer.extractOverlays(this.mc, deltaTracker, camera, ticks, profiler);
         }
@@ -205,7 +205,7 @@ public class RenderHandler implements IRenderer
     public void onRenderWorldLast(RenderTarget fb, Matrix4fc modelViewMatrix, CameraRenderState cameraState, Frustum culling, RenderBuffers buffers, GpuBufferSlice terrainFog, Vector4f fogColor, ProfilerFiller profiler)
     {
         if (Configs.Generic.MAIN_RENDERING_TOGGLE.getBooleanValue() &&
-            this.mc.level != null && this.mc.player != null && this.mc.options.hideGui == false)
+            this.mc.level != null && this.mc.player != null && this.mc.gui.hud.isHidden() == false)
         {
             OverlayRenderer.renderOverlays(modelViewMatrix, this.mc, culling, cameraState, profiler);
         }

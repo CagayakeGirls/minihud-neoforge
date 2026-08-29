@@ -39,7 +39,7 @@ import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 
-import fi.dy.masa.malilib.util.IntBoundingBox;
+import fi.dy.masa.malilib.util.position.IntBoundingBox;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.malilib.util.data.DataBlockUtils;
 import fi.dy.masa.malilib.util.data.tag.CompoundData;

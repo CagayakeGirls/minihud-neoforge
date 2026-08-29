@@ -21,13 +21,14 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.Vec3;
 
 import fi.dy.masa.malilib.render.MaLiLibPipelines;
-import fi.dy.masa.malilib.util.LayerRange;
+import fi.dy.masa.malilib.util.position.LayerRange;
 import fi.dy.masa.malilib.util.data.Color4f;
 import fi.dy.masa.malilib.util.position.PositionUtils;
 import fi.dy.masa.malilib.util.position.Vec3d;
 import fi.dy.masa.minihud.MiniHUD;
 import fi.dy.masa.minihud.config.Configs;
 import fi.dy.masa.minihud.config.RendererToggle;
+import fi.dy.masa.minihud.data.CachedTagManager;
 import fi.dy.masa.minihud.renderer.shapes.SideQuad;
 import fi.dy.masa.minihud.renderer.worker.BlockScanWorkerTask;
 import fi.dy.masa.minihud.renderer.worker.WorkerDaemonHandler;
@@ -438,14 +439,7 @@ public class OverlayRendererLightningRodRange extends OverlayRendererBase
 
 	private boolean isLightningRodBlock(Block block)
 	{
-		return  block == Blocks.LIGHTNING_ROD ||
-				block == Blocks.EXPOSED_LIGHTNING_ROD ||
-				block == Blocks.WEATHERED_LIGHTNING_ROD ||
-				block == Blocks.OXIDIZED_LIGHTNING_ROD ||
-				block == Blocks.WAXED_LIGHTNING_ROD ||
-				block == Blocks.WAXED_EXPOSED_LIGHTNING_ROD ||
-				block == Blocks.WAXED_WEATHERED_LIGHTNING_ROD ||
-				block == Blocks.WAXED_OXIDIZED_LIGHTNING_ROD;
+		return CachedTagManager.isLightningRod(block);
 	}
 
 	/**

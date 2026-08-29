@@ -75,7 +75,7 @@ public class OverlayRendererBiomeBorders extends OverlayRendererBase
         {
             // All the quads need to have the same relative camera offset, so
             // we use an internal position that is only updated when all the quads are cleared
-            this.cameraPosition = Minecraft.getInstance().gameRenderer.getMainCamera().position();
+            this.cameraPosition = Minecraft.getInstance().gameRenderer.mainCamera().position();
 
             this.needsUpdate = true;
             this.clear(); // FIXME debug?
@@ -94,7 +94,7 @@ public class OverlayRendererBiomeBorders extends OverlayRendererBase
 
             // All the quads need to have the same relative camera offset, so
             // we use an internal position that is only updated when all the quads are cleared
-            this.cameraPosition = Minecraft.getInstance().gameRenderer.getMainCamera().position();
+            this.cameraPosition = Minecraft.getInstance().gameRenderer.mainCamera().position();
         }
     }
 

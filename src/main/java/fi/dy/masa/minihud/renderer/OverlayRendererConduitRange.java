@@ -16,11 +16,12 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BlockEntityTypes;
 import net.minecraft.world.level.block.entity.ConduitBlockEntity;
 import net.minecraft.world.phys.Vec3;
 
 import fi.dy.masa.malilib.render.MaLiLibPipelines;
-import fi.dy.masa.malilib.util.LayerRange;
+import fi.dy.masa.malilib.util.position.LayerRange;
 import fi.dy.masa.malilib.util.data.Color4f;
 import fi.dy.masa.malilib.util.position.PositionUtils;
 import fi.dy.masa.malilib.util.position.Vec3d;
@@ -49,7 +50,7 @@ public class OverlayRendererConduitRange extends BaseBlockRangeOverlay<ConduitBl
 
     public OverlayRendererConduitRange()
     {
-        super(RendererToggle.OVERLAY_CONDUIT_RANGE, BlockEntityType.CONDUIT, ConduitBlockEntity.class);
+        super(RendererToggle.OVERLAY_CONDUIT_RANGE, BlockEntityTypes.CONDUIT, ConduitBlockEntity.class);
         this.quadAxis = Direction.UP.getAxis();
         this.renderType = ShapeRenderType.OUTER_EDGE;
         this.layerRange = new LayerRange(null);

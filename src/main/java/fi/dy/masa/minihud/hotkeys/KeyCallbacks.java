@@ -188,9 +188,9 @@ public class KeyCallbacks
             }
             else if (key == Configs.Generic.INVENTORY_PREVIEW_TOGGLE_SCREEN.getKeybind())
             {
-                if (mc.screen instanceof InventoryOverlayScreen)
+                if (mc.gui.screen() instanceof InventoryOverlayScreen)
                 {
-                    mc.setScreen(null);
+                    mc.gui.setScreen(null);
                 }
                 else if (Configs.Generic.INVENTORY_PREVIEW_ENABLED.getBooleanValue() &&
                         Configs.Generic.INVENTORY_PREVIEW.getKeybind().isKeybindHeld())

@@ -11,6 +11,7 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
@@ -590,17 +591,17 @@ public class OverlayRendererLightLevel extends OverlayRendererBase
         BlockState stateDown = chunk.getBlockState(this.mutablePos);
 
         if ((skipBlockCheck && stateDown.isAir() == false && (stateDown.getBlock() instanceof LiquidBlock) == false) ||
-            stateDown.isValidSpawn(world, this.mutablePos, EntityType.CREEPER))
+            stateDown.isValidSpawn(world, this.mutablePos, EntityTypes.CREEPER))
         {
             this.mutablePos.set(x, y, z);
             BlockState state = chunk.getBlockState(this.mutablePos);
 
-            if (this.isClearForSpawnWrapper(world, this.mutablePos, state, state.getFluidState(), EntityType.WITHER_SKELETON))
+            if (this.isClearForSpawnWrapper(world, this.mutablePos, state, state.getFluidState(), EntityTypes.WITHER_SKELETON))
             {
                 this.mutablePos.set(x, y + 1, z);
                 BlockState stateUp1 = chunk.getBlockState(this.mutablePos);
 
-                return this.isClearForSpawnWrapper(world, this.mutablePos, stateUp1, state.getFluidState(), EntityType.WITHER_SKELETON);
+                return this.isClearForSpawnWrapper(world, this.mutablePos, stateUp1, state.getFluidState(), EntityTypes.WITHER_SKELETON);
             }
 
             if (state.getFluidState().is(FluidTags.WATER))
