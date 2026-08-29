@@ -13,7 +13,7 @@ import net.minecraft.world.phys.AABB;
 
 import fi.dy.masa.malilib.util.BlockSnap;
 import fi.dy.masa.malilib.util.EntityUtils;
-import fi.dy.masa.malilib.util.IntBoundingBox;
+import fi.dy.masa.malilib.util.position.IntBoundingBox;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.malilib.util.data.Color4f;
 import fi.dy.masa.malilib.util.data.json.JsonUtils;
@@ -121,7 +121,7 @@ public abstract class ShapeBlocky extends ShapeBase
         IntBoundingBox box = this.layerRange.getExpandedBox(this.mc.level, 0);
 
         Consumer<BlockPos.MutableBlockPos> positionCollector = (pos) -> {
-            if (box.containsPos(pos))
+            if (box.contains(pos))
             {
                 positionsOut.add(pos.asLong());
             }

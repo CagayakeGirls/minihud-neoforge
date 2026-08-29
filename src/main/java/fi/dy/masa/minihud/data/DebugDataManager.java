@@ -135,7 +135,7 @@ public class DebugDataManager
 		Collection<Identifier> list = profile.getCurrentlyEnabled();
 
 		return (profile.isOverlayVisible() || !this.checkVisibleEntries(list))
-				&& (!this.mc.options.hideGui || this.mc.screen != null);
+				&& (!this.mc.gui.hud.isHidden() || this.mc.gui.screen() != null);
 	}
 
 	private boolean checkVisibleEntries(Collection<Identifier> list)
@@ -250,7 +250,7 @@ public class DebugDataManager
 					.minihud_getDebugManager().clear();
 		}
 
-		this.mc.levelRenderer.debugRenderer.refreshRendererList();
+		this.mc.levelExtractor.debugRenderer.refreshRendererList();
 	}
 
 	public void setIsServuxServer()

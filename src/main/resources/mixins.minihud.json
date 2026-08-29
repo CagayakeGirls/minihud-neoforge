@@ -9,7 +9,6 @@
         "block.IMixinBeaconBlockEntity",
         "block.MixinBeaconBlockEntity",
         "block.MixinConduitBlockEntity",
-        "client.MixinLanguage",
         "entity.IMixinCopperGolemEntity",
         "entity.IMixinEntity",
         "entity.IMixinPassiveEntity",
@@ -41,7 +40,9 @@
         "hud.MixinSubtitleOverlay",
         "network.MixinClientPacketListener",
         "network.MixinClientPlayerInteractionManager",
+        "render.IMixinLevelExtractor",
         "render.IMixinWorldRenderer",
+        "render.MixinLevelExtractor",
         "render.MixinLevelRenderer"
     ],
     "server": [],

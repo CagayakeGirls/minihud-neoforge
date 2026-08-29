@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.animal.golem.CopperGolem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.WeatheringCopper;
@@ -58,7 +59,7 @@ public class InfoLineCopperAging extends InfoLine
     {
         List<Entry> list = new ArrayList<>();
 
-		if (entityType.equals(EntityType.COPPER_GOLEM))
+		if (entityType.equals(EntityTypes.COPPER_GOLEM))
 		{
 			Pair<WeatheringCopper.WeatherState, Long> pair = DataEntityUtils.getWeatheringData(data);
 			WeatheringCopper.WeatherState level = pair.getLeft();

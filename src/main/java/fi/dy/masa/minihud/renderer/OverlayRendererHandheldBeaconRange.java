@@ -188,7 +188,7 @@ public class OverlayRendererHandheldBeaconRange extends OverlayRendererBase
     private void calculateBeaconBoxForPlayer(Level world, Entity entity, Minecraft mc)
     {
         if (mc.player == null) return;
-        Vec3 cameraPos = mc.gameRenderer.getMainCamera().position();
+        Vec3 cameraPos = mc.gameRenderer.mainCamera().position();
         double x = Math.floor(entity.getX()) - cameraPos.x;
         double y = Math.floor(entity.getY()) - cameraPos.y;
         double z = Math.floor(entity.getZ()) - cameraPos.z;

@@ -15,6 +15,8 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+import com.mojang.blaze3d.IndexType;
+import com.mojang.blaze3d.PrimitiveTopology;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
@@ -47,11 +49,11 @@ public class RenderObjectVbo
     private GpuBuffer vertexBuffer;
     @Nullable private GpuBuffer indexBuffer;
     private RenderSystem.AutoStorageIndexBuffer shapeIndex;
-    private VertexFormat.IndexType indexType;
+    private IndexType indexType;
     private ByteBufferBuilder alloc;
     private BufferBuilder builder;
     private VertexFormat format;
-    private VertexFormat.Mode drawMode;
+    private PrimitiveTopology drawMode;
 	private final HashMap<Integer, SimpleTexture> textures;
 	@Nullable private MeshData.SortState sortState;
 	private float[] offset;
@@ -63,12 +65,18 @@ public class RenderObjectVbo
     protected RenderObjectVbo(Supplier<String> name, RenderPipeline shader)
     {
         this.name = name;
-        this.alloc = new ByteBufferBuilder(shader.getVertexFormat().getVertexSize() * 4);
-        this.builder = new BufferBuilder(this.alloc, shader.getVertexFormatMode(), shader.getVertexFormat());
-        this.shapeIndex = RenderSystem.getSequentialBuffer(shader.getVertexFormatMode());
+        this.format = shader.getVertexFormatBinding(0);
+
+        if (this.format == null)
+        {
+            throw new IllegalArgumentException("Invalid Vertex binding format index: 0");
+        }
+
+        this.drawMode = shader.getPrimitiveTopology();
+        this.alloc = new ByteBufferBuilder(this.format.getVertexSize() * 4);
+        this.builder = new BufferBuilder(this.alloc, this.drawMode, this.format);
+        this.shapeIndex = RenderSystem.getSequentialBuffer(this.drawMode);
         this.indexType = this.shapeIndex.type();
-        this.format = shader.getVertexFormat();
-        this.drawMode = shader.getVertexFormatMode();
         this.shader = shader;
         this.vertexBuffer = null;
         this.indexBuffer = null;
@@ -85,12 +93,18 @@ public class RenderObjectVbo
     {
         this.reset();
         this.name = name;
-        this.alloc = new ByteBufferBuilder(shader.getVertexFormat().getVertexSize() * 4);
-        this.builder = new BufferBuilder(this.alloc, shader.getVertexFormatMode(), shader.getVertexFormat());
-        this.shapeIndex = RenderSystem.getSequentialBuffer(shader.getVertexFormatMode());
+        this.format = shader.getVertexFormatBinding(0);
+
+        if (this.format == null)
+        {
+            throw new IllegalArgumentException("Invalid Vertex binding format index: 0");
+        }
+
+        this.drawMode = shader.getPrimitiveTopology();
+        this.alloc = new ByteBufferBuilder(this.format.getVertexSize() * 4);
+        this.builder = new BufferBuilder(this.alloc, this.drawMode, this.format);
+        this.shapeIndex = RenderSystem.getSequentialBuffer(this.drawMode);
         this.indexType = this.shapeIndex.type();
-        this.format = shader.getVertexFormat();
-        this.drawMode = shader.getVertexFormatMode();
         this.shader = shader;
         this.vertexBuffer = null;
         this.indexBuffer = null;
@@ -122,7 +136,7 @@ public class RenderObjectVbo
         return this.format;
     }
 
-    public VertexFormat.Mode getDrawMode()
+    public PrimitiveTopology getDrawMode()
     {
         return this.drawMode;
     }
@@ -131,17 +145,17 @@ public class RenderObjectVbo
     {
         if (this.shader != null)
         {
-            return this.shader.getVertexFormat();
+            return this.shader.getVertexFormatBinding(0);
         }
 
         return this.format;
     }
 
-    public VertexFormat.Mode getShaderDrawMode()
+    public PrimitiveTopology getShaderDrawMode()
     {
         if (this.shader != null)
         {
-            return this.shader.getVertexFormatMode();
+            return this.shader.getPrimitiveTopology();
         }
 
         return this.drawMode;
@@ -675,7 +689,7 @@ public class RenderObjectVbo
                 return;
             }
 
-            RenderTarget mainFb = RenderUtils.fb();
+            RenderTarget mainFb = RenderUtils.mainTarget();
             GpuTextureView texture1;
             GpuTextureView texture2;
 
@@ -694,14 +708,14 @@ public class RenderObjectVbo
             GpuBuffer indexBuffer = this.shapeIndex.getBuffer(this.indexCount);
             GpuBufferSlice gpuSlice = RenderSystem.getDynamicUniforms()
                                                   .writeTransform(
-                                                          RenderSystem.getModelViewMatrix(),
+                                                          RenderSystem.getModelViewMatrixCopy(),
                                                           colorMod,
                                                           modelOffset,
                                                           texMatrix);
 
             try (RenderPass pass = device.createCommandEncoder()
                      .createRenderPass(this.name,
-                                       texture1, OptionalInt.empty(),
+                                       texture1, Optional.empty(),
                                        texture2, OptionalDouble.empty()))
             {
                 //MiniHUD.LOGGER.warn("RenderContext#drawInternal() [{}] renderPass --> setPipeline() [{}]", this.name.get(), this.shader.getLocation().toString());
@@ -727,7 +741,7 @@ public class RenderObjectVbo
                 }
 
                 //MiniHUD.LOGGER.warn("RenderContext#drawInternal() [{}] renderPass --> setVertexBuffer() [0]", this.name.get());
-                pass.setVertexBuffer(0, this.vertexBuffer);
+                pass.setVertexBuffer(0, this.vertexBuffer.slice());
 
 	            if (!this.textures.isEmpty())
 	            {
@@ -746,7 +760,7 @@ public class RenderObjectVbo
 	            }
 
                 //MiniHUD.LOGGER.warn("RenderContext#drawInternal() [{}] renderPass --> drawIndexed() [0, {}]", this.name.get(), this.bufferIndex);
-                pass.drawIndexed(0, 0, this.indexCount, 1);
+                pass.drawIndexed(this.indexCount, 1, 0, 0, 0);
             }
 
             //MiniHUD.LOGGER.warn("RenderContext#drawInternal() [{}] --> END", this.name.get());

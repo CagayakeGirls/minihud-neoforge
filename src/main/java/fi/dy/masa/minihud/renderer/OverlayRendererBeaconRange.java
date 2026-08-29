@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.entity.BeaconBeamOwner;
 import net.minecraft.world.level.block.entity.BeaconBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BlockEntityTypes;
 import net.minecraft.world.phys.Vec3;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.MeshData;
@@ -36,7 +37,7 @@ public class OverlayRendererBeaconRange extends BaseBlockRangeOverlay<BeaconBloc
 
     public OverlayRendererBeaconRange()
     {
-        super(RendererToggle.OVERLAY_BEACON_RANGE, BlockEntityType.BEACON, BeaconBlockEntity.class);
+        super(RendererToggle.OVERLAY_BEACON_RANGE, BlockEntityTypes.BEACON, BeaconBlockEntity.class);
         this.useCulling = false;
         this.positions = new HashMap<>();
         this.useCulling = false;

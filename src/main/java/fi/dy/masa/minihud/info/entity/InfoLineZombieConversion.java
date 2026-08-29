@@ -6,6 +6,7 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.monster.skeleton.Skeleton;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.monster.zombie.ZombieVillager;
@@ -62,17 +63,17 @@ public class InfoLineZombieConversion extends InfoLine
         List<Entry> list = new ArrayList<>();
         int conversionTimer = -1;
 
-        if (entityType.equals(EntityType.ZOMBIE_VILLAGER))
+        if (entityType.equals(EntityTypes.ZOMBIE_VILLAGER))
         {
             Pair<Integer, UUID> zombieDoctor = DataEntityUtils.getZombieConversionTimer(data);
             conversionTimer = zombieDoctor.getLeft();
         }
-        else if (entityType.equals(EntityType.ZOMBIE))
+        else if (entityType.equals(EntityTypes.ZOMBIE))
         {
             Pair<Integer, Integer> zombieDoctor = DataEntityUtils.getDrownedConversionTimer(data);
             conversionTimer = zombieDoctor.getLeft();
         }
-        else if (entityType.equals(EntityType.SKELETON))
+        else if (entityType.equals(EntityTypes.SKELETON))
         {
             conversionTimer = DataEntityUtils.getStrayConversionTime(data);
         }

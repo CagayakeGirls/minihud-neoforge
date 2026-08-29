@@ -19,6 +19,8 @@ import net.minecraft.world.phys.Vec3;
 
 import fi.dy.masa.malilib.render.MaLiLibPipelines;
 import fi.dy.masa.malilib.util.*;
+import fi.dy.masa.malilib.util.position.IntBoundingBox;
+import fi.dy.masa.malilib.util.position.LayerRange;
 import fi.dy.masa.malilib.util.data.json.JsonUtils;
 import fi.dy.masa.malilib.util.position.PositionUtils;
 import fi.dy.masa.malilib.util.position.Vec3d;
@@ -339,7 +341,7 @@ public class ShapeLineBlock extends ShapeBlocky
         IntBoundingBox box = this.layerRange.getExpandedBox(this.mc.level, 0);
 
         LongConsumer positionCollector = (pos) -> {
-            if (box.containsPos(pos))
+            if (box.contains(pos))
             {
                 positionsOut.add(pos);
             }
